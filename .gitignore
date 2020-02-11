@@ -1,0 +1,12 @@
+# ignore the environment variable file/s
+*.env
+
+# ignore my notes and temp files
+/notes
+/media/temp
+
+# ignore pycache
+/__pycache__
+
+# ignore vscode settings files
+/.vscode
