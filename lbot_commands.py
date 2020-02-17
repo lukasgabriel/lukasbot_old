@@ -54,16 +54,14 @@ async def hello(ctx):
         'Have you had a successful day, ' + author + '?',
     ]
     greetings_night = [
-        'Still awake, ' + author + ', ?',
-        'Can\'t sleep, ' + author + ', ?',
-        'Night owl, huh? Me too. \n Matter of fact, I never sleep. Never understood the appeal.',
+        'Still awake, ' + author + '?',
+        'Can\'t sleep, ' + author + '?',
+        'Night owl, huh? Me too. \nMatter of fact, I never sleep. Never understood the appeal.',
     ]
 
     hour = datetime.datetime.now().hour
 
-    if 23 <= hour < 4:
-        response = random.choice(greetings_night)
-    elif 4 <= hour < 7:
+    if 4 <= hour < 7:
         response = random.choice(greetings_earlymorning)
     elif 8 <= hour < 12:
         response = random.choice(greetings_morning)
@@ -73,6 +71,8 @@ async def hello(ctx):
         response = random.choice(greetings_afternoon)
     elif 19 <= hour < 23:
         response = random.choice(greetings_evening)
+    else:
+        response = random.choice(greetings_night)
 
     await ctx.send(response)
 
@@ -188,3 +188,115 @@ async def person(ctx):
 #
 # TODO: Idea with calculator: support other operations as well, all kinds of cool math and visualisation stuff
 # like creating a diagram for a specified function oder something like that
+
+# '>whattoplay' - Gives a suggestion what the gang gang could play together.
+@start.bot.command(name='whattoplay', help='I\'ll give you a suggestion what you could play together')
+async def whattoplay(ctx):
+
+    mp_games = [
+        'Gang Beasts',
+        'Age of Empires: Definitive Edition',
+        'RAFT',
+        'Monster Hunter: World',
+        'League of Legends',
+        'Rocket League',
+        'Gwent',
+        'Terraria...with Mods',
+        'Escape from Tarkov',
+        'Temtem',
+        'Wolcen: Lords of Mayhem',
+        'skribbl.io',
+        'UNO',
+        'Cards Against Humanity',
+        'nothing, and go outside instead',
+        'nothing, ands study instead',
+        'Halo: Master Chief Collection',
+        'Tower Unite',
+        'Tabletop Simulator',
+        'Garry\'s Mod',
+        'Deep Rock Galactic',
+        'Counter-Strike: Global Offensive',
+        'DotA 2',
+        'Starbound',
+        'MORDHAU',
+        'ASTRONEER',
+        'Destiny 2',
+        'Modded Minecraft',
+        'Warframe',
+        'Unturned',
+        'Left 4 Dead 2',
+        'Portal 2 Co-Op',
+        'Apex Legends',
+        'Fortnite',
+        'Spellsworn',
+        'SCUM',
+        'Read Dead Redemption 2',
+        'ShellShock Live',
+        'Grand Theft Auto V',
+        'Darwin Project',
+        'BattleBlock Theater',
+        'SpeedRunners',
+        'OverCooked 2',
+        'Plants vs Zombies: Battle for Neighborville',
+        'Borderlands 3',
+        'Sea of Thieves',
+        'Divinity: Original Sin',
+        'Overwatch',
+        'Keep Talking and Nobody Explodes',
+        'Payday',
+        'Payday 2',
+        'Rainbow Six: Siege',
+        'TowerFall Ascension',
+        'Jackbox Party Game Series',
+        'Nidhogg',
+        'Octodad',
+        'Ultimate Chicken Horse',
+        'Screencheat',
+        'Call of Duty: Modern Warfare',
+        'Trouble in Terrorist Town',
+        'Mario Kart 8',
+        'Mario Party',
+        'Garry\'s Mod: Murder',
+        'PUBG',
+        'Super Smash Bros. Ultimate',
+        'Team Fortress 2',
+        'Don\'t Starve Together',
+        'Monday Night Combat',
+        'Battlefield 2',
+        'Star Wars: Battlefront (Classic)',
+        'GTA: San Andreas Multiplayer',
+        'Old School RuneScape',
+        'A Way Out',
+        'Half Life: Deathmatch',
+        'TES V: Skyrim - Multiplayer Mod',
+        'The Forest',
+        'ARK: Survival Evolved',
+        'Rust',
+        'Life is Feudal',
+        'Roblox',
+        'Habbo Hotel',
+        'GeoGuessr',
+        'MS Paint Adventures',
+        'Town of Salem',
+        'Fallout 76   .....just kiiding lmao, don\'t fucking touch that game with a 100 ft pole'            
+    ]
+
+    response = 'Hmmm, let me think...  today, you could play ' + random.choice(mp_games) + '!'
+
+    await ctx.send(response)
+
+# '>addgame' - add a game to the list that 'whattoplay' uses (currently have to be added manually)
+@start.bot.command(name='addgame', help='Add a game to the list of games that I suggest when you call ''>whattoplay''')
+async def addgame(ctx):
+
+    author = ctx.message.author.name
+    game_wish = ctx.message.content[9:]
+    record = author + ';' + game_wish + '\n'
+
+    f = open("gamesuggestions.txt", "a+")
+    f.write(record)
+    f.close()
+
+    response = author + ', you added \'' + game_wish + '\' to the list. Thank you for your suggestion!'
+
+    await ctx.send(response)
