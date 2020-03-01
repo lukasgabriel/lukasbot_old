@@ -18,6 +18,9 @@ from discord.ext import commands
 # This API fetches pictures from the GAN sites 'thiscat/persondoesnotexist.com'
 from thisapidoesnotexist import get_cat, get_person
 
+# Returns quotes for the cookie command
+import fortune
+
 # if unexpected behavior occurs, we don't want to ignore it, but the bot should not stop either
 # instead, we just include a print(ERR_RESPONSE) as fallback so we have feedback
 err_response = 'BLEEP BLOOP I\'M MALFUNCTIONING PLEASE CALL MY CREATOR @flyomotive TO FIX ME!'
@@ -300,3 +303,52 @@ async def addgame(ctx):
     response = author + ', you added \'' + game_wish + '\' to the list. Thank you for your suggestion!'
 
     await ctx.send(response)
+
+# '>kms' - kills yourself
+@start.bot.command(name='kms', help='Allows you to kill yourself.')
+async def kms(ctx):
+
+    author = ctx.message.author.name
+
+    response = author + ' has killed themselves.'
+
+    suicides = [
+        author + ' shot themselves in the head.',
+        'Cleanup in aisle 5, \'cause ' + author + ' blasted their brains out.',
+        author + 'just hung themselves. :PepeHang:',
+        author + ' jumped into an industrial hydraulic press, and is now dead.',
+        author + ' took 25 sleeping pills and ended it all.',
+        'Oh no! Someone found you in time and called an ambulance, you are now alive but crippled for life.',
+        author + ' jumped out of a 25th story window and went splat.',
+        author + ' jumped in front of a train, killing themselves and traumatizing the driver for life.',
+        author + ' tied their foot to a heavy rock and kicked it down a waterfall. They are now fish food.',
+        author + ' covered themselves in gasoline, set it on fire and burned to a crisp.',
+        author + ' wanted one last crazy trip and gave themselves the golden shot.',
+        author + ' overdosed on pain meds and choked on their own vomit.',
+        author + ' drank two litres of bleach and died a very painful death.',
+        author + ' closed the garage door and left the engine running until they passed out.',
+        author + ' chose honor over life and committed seppuku. They are now a human kebab.',
+        author + ' built a bomb at home and went out with a bang.',
+        author + ' jumped in front of a chool bus. 37 school children will never laugh again.',
+        author + ' jumped out of an airplane ... without a parachute.',
+        author + ' cut their radial artery in the bathtub and bled to death.'
+    ]
+
+    response = random.choice(suicides)
+
+    await ctx.send(response)
+
+# '>cookie' - reads a fortune cookie quote to the user
+#@start.bot.command(name='cookie', help='Reads a fortune cookie quote to you.')
+#async def cookie(ctx):
+#
+#    try:
+#        start.load_dotenv()
+#        FORTUNE_FILE = start.os.getenv('FORTUNE_FILE')
+#    except:
+#        print('Error: No Fortune file path specified in environment variables!')
+#        raise EnvironmentError
+#
+#    response = exec(fortune)
+#
+#    await ctx.send(response)
