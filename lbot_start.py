@@ -13,6 +13,8 @@ from dotenv import load_dotenv
 import requests
 import json
 
+from twilio.rest import Client
+
 # Discord Python Library
 import discord
 from discord.ext import commands
@@ -44,6 +46,35 @@ def slack_post(msg):
             'Request to slack returned an error %s, the response is:\n%s'
             % (response.status_code, response.text)
         )
+
+    return
+
+# Sends SMS via twilio API
+def sms_msg(msg, number, author):
+
+    try:
+        load_dotenv()
+        TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+    except:
+        print('Error: No Twilio Account SID found in environment variables!')
+        raise EnvironmentError
+
+    try:
+        load_dotenv()
+        TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+    except:
+        print('Error: No Twilio Auth Token found in environment variables!')
+        raise EnvironmentError
+
+    client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+
+    message = client.messages.create(body=msg,
+                        from_='+12055573240',
+                        to=number)
+
+    slack_post('SMS message sent via twilio with SID: ' + message.sid)
+
+    return
 
 # creates event that prints console output as soon as bot connects to discord
 @bot.event

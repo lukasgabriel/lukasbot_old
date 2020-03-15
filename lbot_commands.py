@@ -281,7 +281,7 @@ async def whattoplay(ctx):
         'GeoGuessr',
         'MS Paint Adventures',
         'Town of Salem',
-        'Fallout 76   .....just kiiding lmao, don\'t fucking touch that game with a 100 ft pole'            
+        'Fallout 76   .....just kidding lmao, don\'t fucking touch that game with a 100 ft pole'            
     ]
 
     response = 'Hmmm, let me think...  today, you could play ' + random.choice(mp_games) + '!'
@@ -303,38 +303,63 @@ async def addgame(ctx):
     await ctx.send(msgresponse)
 
 # '>kms' - kills yourself
-@start.bot.command(name='kms', help='Allows you to kill yourself.')
-async def kms(ctx):
+# @start.bot.command(name='kms', help='Allows you to kill yourself.')
+# async def kms(ctx):
 
-    author = ctx.message.author.name
+#     author = ctx.message.author.name
 
-    response = author + ' has killed themselves.'
+#     response = author + ' has killed themselves.'
 
-    suicides = [
-        author + ' shot themselves in the head.',
-        'Cleanup in aisle 5, \'cause ' + author + ' blasted their brains out.',
-        author + 'just hung themselves. :PepeHang:',
-        author + ' jumped into an industrial hydraulic press, and is now dead.',
-        author + ' took 25 sleeping pills and ended it all.',
-        'Oh no! Someone found you in time and called an ambulance, you are now alive but crippled for life.',
-        author + ' jumped out of a 25th story window and went splat.',
-        author + ' jumped in front of a train, killing themselves and traumatizing the driver for life.',
-        author + ' tied their foot to a heavy rock and kicked it down a waterfall. They are now fish food.',
-        author + ' covered themselves in gasoline, set it on fire and burned to a crisp.',
-        author + ' wanted one last crazy trip and gave themselves the golden shot.',
-        author + ' overdosed on pain meds and choked on their own vomit.',
-        author + ' drank two litres of bleach and died a very painful death.',
-        author + ' closed the garage door and left the engine running until they passed out.',
-        author + ' chose honor over life and committed seppuku. They are now a human kebab.',
-        author + ' built a bomb at home and went out with a bang.',
-        author + ' jumped in front of a chool bus. 37 school children will never laugh again.',
-        author + ' jumped out of an airplane ... without a parachute.',
-        author + ' cut their radial artery in the bathtub and bled to death.'
-    ]
+#     suicides = [
+#         author + ' shot themselves in the head.',
+#         'Cleanup in aisle 5, \'cause ' + author + ' blasted their brains out.',
+#         author + 'just hung themselves. :PepeHang:',
+#         author + ' jumped into an industrial hydraulic press, and is now dead.',
+#         author + ' took 25 sleeping pills and ended it all.',
+#         'Oh no! Someone found you in time and called an ambulance, you are now alive but crippled for life.',
+#         author + ' jumped out of a 25th story window and went splat.',
+#         author + ' jumped in front of a train, killing themselves and traumatizing the driver for life.',
+#         author + ' tied their foot to a heavy rock and kicked it down a waterfall. They are now fish food.',
+#         author + ' covered themselves in gasoline, set it on fire and burned to a crisp.',
+#         author + ' wanted one last crazy trip and gave themselves the golden shot.',
+#         author + ' overdosed on pain meds and choked on their own vomit.',
+#         author + ' drank two litres of bleach and died a very painful death.',
+#         author + ' closed the garage door and left the engine running until they passed out.',
+#         author + ' chose honor over life and committed seppuku. They are now a human kebab.',
+#         author + ' built a bomb at home and went out with a bang.',
+#         author + ' jumped in front of a chool bus. 37 school children will never laugh again.',
+#         author + ' jumped out of an airplane ... without a parachute.',
+#         author + ' cut their radial artery in the bathtub and bled to death.'
+#     ]
 
-    response = random.choice(suicides)
+#     response = random.choice(suicides)
 
-    await ctx.send(response)
+#     await ctx.send(response)
+
+# '>sms' - send sms via twilio
+@start.bot.command(name='sms', help='Send an SMS. Format your request like so:  MESSAGE : NUMBER (separate with colon, no whitespaces in number.)  -  Remember to include country code with the number.')
+async def sms(ctx):
+
+    msgresponse = 'The SMS command is currently being implemented. Check back later.'
+    
+    # TODO: Instead of manually specifying phone number, add a phonebook with approved numbers and pick number from there according to name in command call.
+    # TODO: Create webhook to receive and forward replies to discord channels.
+    # TODO: Implement tracking of SMS delivery status via webhook.
+    # TODO: Create reminder functionality to let users set SMS reminders for themselves.
+
+    # author = ctx.message.author.name
+    # msg_raw = ctx.message.content[4:]
+
+    # msg = 'Message from ' + author + ': ' + msg_raw.rsplit(':', 1)[0]
+    # number = msg_raw.rsplit(':', 1)[1]
+
+    # start.sms_msg(msg, number, author)
+
+    # start.slack_post('SMS request received from ' + author + ' to ' + number + ' with message: ' + msg_raw.rsplit(':', 1)[0])
+
+    # msgresponse = 'Outbound SMS request received.'
+
+    await ctx.send(msgresponse)
 
 # '>cookie' - reads a fortune cookie quote to the user
 #@start.bot.command(name='cookie', help='Reads a fortune cookie quote to you.')
