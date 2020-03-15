@@ -315,7 +315,7 @@ async def addresses(ctx):
 
 # '>sms' - send sms via twilio
 @start.bot.command(name='sms', help='Send an SMS. Format your request like so:  MESSAGE : RECIPIENT  -  you can view the command\'s address book with the \'>addresses\' command.')
-@commands.cooldown(4, 3600, commands.BucketType.guild) # Command can be used four times per hour before triggering a server-wide cooldown of 1 hour.
+@commands.cooldown(4, 7200, commands.BucketType.guild) # Command can be used four times per 120 minutes before triggering a server-wide cooldown of 2 hours.
 async def sms(ctx):
 
     # TODO: Create webhook to receive and forward replies to discord channels.
