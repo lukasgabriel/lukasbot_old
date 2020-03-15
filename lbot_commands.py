@@ -299,25 +299,8 @@ async def addgame(ctx):
     game_wish = ctx.message.content[9:]
     record = author + ' suggested the game ' + game_wish + ' via the \'>addgame\' command.'
 
-    webhook_url = 'https://hooks.slack.com/services/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'
-    slack_data = {
-                 'text': record,
-                 'username': 'lukasbot-discord',
-                 'icon_url': 'https://github.com/lukasgabriel/lukasbot/blob/master/media/avatar.png',
-                 'channel': '#lukasbot-discord'
-                 }
-
-    response = requests.post(
-        webhook_url, data=json.dumps(slack_data),
-        headers={'Content-Type': 'application/json'}
-    )
+    start.slack_post(record)
     
-    if response.status_code != 200:
-        raise ValueError(
-            'Request to slack returned an error %s, the response is:\n%s'
-            % (response.status_code, response.text)
-        )
-
     msgresponse = author + ', you added \'' + game_wish + '\' to the list. Thank you for your suggestion!'
 
     await ctx.send(msgresponse)
