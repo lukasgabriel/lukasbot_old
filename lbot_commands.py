@@ -302,42 +302,19 @@ async def addgame(ctx):
 
     await ctx.send(msgresponse)
 
-# '>kms' - kills yourself
-# @start.bot.command(name='kms', help='Allows you to kill yourself.')
-# async def kms(ctx):
+# '>addresses' - read recipients (keys) from address_book dict
+@start.bot.command(name='addresses', help='Returns all address book entries that currently have their phone number set and can receive SMS messages.')
+async def addresses(ctx):
 
-#     author = ctx.message.author.name
+    recipients = ''
 
-#     response = author + ' has killed themselves.'
+    for key in start.address_book:
+        recipients += '  -  ' + key 
 
-#     suicides = [
-#         author + ' shot themselves in the head.',
-#         'Cleanup in aisle 5, \'cause ' + author + ' blasted their brains out.',
-#         author + 'just hung themselves. :PepeHang:',
-#         author + ' jumped into an industrial hydraulic press, and is now dead.',
-#         author + ' took 25 sleeping pills and ended it all.',
-#         'Oh no! Someone found you in time and called an ambulance, you are now alive but crippled for life.',
-#         author + ' jumped out of a 25th story window and went splat.',
-#         author + ' jumped in front of a train, killing themselves and traumatizing the driver for life.',
-#         author + ' tied their foot to a heavy rock and kicked it down a waterfall. They are now fish food.',
-#         author + ' covered themselves in gasoline, set it on fire and burned to a crisp.',
-#         author + ' wanted one last crazy trip and gave themselves the golden shot.',
-#         author + ' overdosed on pain meds and choked on their own vomit.',
-#         author + ' drank two litres of bleach and died a very painful death.',
-#         author + ' closed the garage door and left the engine running until they passed out.',
-#         author + ' chose honor over life and committed seppuku. They are now a human kebab.',
-#         author + ' built a bomb at home and went out with a bang.',
-#         author + ' jumped in front of a chool bus. 37 school children will never laugh again.',
-#         author + ' jumped out of an airplane ... without a parachute.',
-#         author + ' cut their radial artery in the bathtub and bled to death.'
-#     ]
-
-#     response = random.choice(suicides)
-
-#     await ctx.send(response)
+    await ctx.send('The following recipients are available:' + recipients)
 
 # '>sms' - send sms via twilio
-@start.bot.command(name='sms', help='Send an SMS. Format your request like so:  MESSAGE : RECIPIENT  -  you can view the command\'s address book with the \'>adresses\' command.')
+@start.bot.command(name='sms', help='Send an SMS. Format your request like so:  MESSAGE : RECIPIENT  -  you can view the command\'s address book with the \'>addresses\' command.')
 @commands.cooldown(4, 3600, commands.BucketType.guild) # Command can be used four times per hour before triggering a server-wide cooldown of 1 hour.
 async def sms(ctx):
     
@@ -351,11 +328,16 @@ async def sms(ctx):
         msg_raw = ctx.message.content[4:]
 
         msg = 'Message from ' + author + ': ' + msg_raw.rsplit(':', 1)[0]
-        number = msg_raw.rsplit(':', 1)[1]
+        recipient_raw = msg_raw.rsplit(':', 1)[1]
+        recipient = recipient_raw.strip()
+        number = start.get_number(recipient)
 
-        start.sms_msg(msg, number, author)
-        start.slack_post('SMS request received from ' + author + ' to ' + number + ' with message: ' + msg_raw.rsplit(':', 1)[0])
-        msgresponse = 'Outbound SMS request received.'
+        if number != None:
+            start.sms_msg(msg, number, author)
+            start.slack_post('SMS request received from ' + author + ' to ' + recipient + ' with message: ' + msg_raw.rsplit(':', 1)[0])
+            msgresponse = 'Outbound SMS request received.'
+        else:
+            msgresponse = 'Recipient not found in address book. Check your spelling or have a look at the address book with \'>addresses\'.'
 
     except:
         msgresponse = 'Invalid message format. Use \'>help sms\' for more info.'

@@ -3,12 +3,11 @@
 #               #
 
 '''
-This module establishes the connection to discord and sets the basic variables.
+I have to put something in this docstring. #TODO: Add stuff here
 '''
 
 import time
 
-# for reading the environment variable that contains the discord token
 import os
 from dotenv import load_dotenv
 
@@ -21,13 +20,25 @@ from twilio.rest import Client
 import discord
 from discord.ext import commands
 
+# telephone number address book for sms commands
+address_book = {
+        'Alex' : '+4917621214313',
+        'Tommi' : '+4915733709805',
+        'Lukas' : '+491623424473',
+        'Gabri' : '+4915732612200',
+        'Sascha' : '+4915733350547',
+        'Svenja' : '+491725923971',
+        'Tolga' : '+4915783461039',
+        'Gafar' : '+4917668547754'
+        }
+
 # include command prefix here
 comm_prefix = '>'
 
-# sets the command prefix that the bot will respond to
+# set the command prefix that the bot will respond to
 bot = commands.Bot(command_prefix=comm_prefix)
 
-# Sends POST request to Slack webhook to post the msg to the Slack channel.
+# send POST request to Slack webhook to post the msg to the Slack channel.
 def slack_post(msg):
     
     webhook_url = 'https://hooks.slack.com/services/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'
@@ -51,7 +62,16 @@ def slack_post(msg):
 
     return
 
-# Sends SMS via twilio API
+# get number of recipient from address book
+def get_number(recipient):
+
+    if recipient in address_book:
+        number = address_book['recipient']
+        return number
+    else:
+        return None
+
+# send SMS via twilio API
 def sms_msg(msg, number, author):
 
     try:
