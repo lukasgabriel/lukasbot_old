@@ -337,27 +337,28 @@ async def addgame(ctx):
 #     await ctx.send(response)
 
 # '>sms' - send sms via twilio
-@start.bot.command(name='sms', help='Send an SMS. Format your request like so:  MESSAGE : NUMBER (separate with colon, no whitespaces in number.)  -  Remember to include country code with the number.')
+@start.bot.command(name='sms', help='Send an SMS. Format your request like so:  MESSAGE : RECIPIENT  -  you can view the command\'s address book with the \'>adresses\' command.')
+@commands.cooldown(4, 3600, commands.BucketType.guild) # Command can be used four times per hour before triggering a server-wide cooldown of 1 hour.
 async def sms(ctx):
-
-    msgresponse = 'The SMS command is currently being implemented. Check back later.'
     
     # TODO: Instead of manually specifying phone number, add a phonebook with approved numbers and pick number from there according to name in command call.
     # TODO: Create webhook to receive and forward replies to discord channels.
     # TODO: Implement tracking of SMS delivery status via webhook.
     # TODO: Create reminder functionality to let users set SMS reminders for themselves.
 
-    # author = ctx.message.author.name
-    # msg_raw = ctx.message.content[4:]
+    try:
+        author = ctx.message.author.name
+        msg_raw = ctx.message.content[4:]
 
-    # msg = 'Message from ' + author + ': ' + msg_raw.rsplit(':', 1)[0]
-    # number = msg_raw.rsplit(':', 1)[1]
+        msg = 'Message from ' + author + ': ' + msg_raw.rsplit(':', 1)[0]
+        number = msg_raw.rsplit(':', 1)[1]
 
-    # start.sms_msg(msg, number, author)
+        start.sms_msg(msg, number, author)
+        start.slack_post('SMS request received from ' + author + ' to ' + number + ' with message: ' + msg_raw.rsplit(':', 1)[0])
+        msgresponse = 'Outbound SMS request received.'
 
-    # start.slack_post('SMS request received from ' + author + ' to ' + number + ' with message: ' + msg_raw.rsplit(':', 1)[0])
-
-    # msgresponse = 'Outbound SMS request received.'
+    except:
+        msgresponse = 'Invalid message format. Use \'>help sms\' for more info.'
 
     await ctx.send(msgresponse)
 

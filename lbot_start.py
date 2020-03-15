@@ -6,6 +6,8 @@
 This module establishes the connection to discord and sets the basic variables.
 '''
 
+import time
+
 # for reading the environment variable that contains the discord token
 import os
 from dotenv import load_dotenv
@@ -75,6 +77,15 @@ def sms_msg(msg, number, author):
     slack_post('SMS message sent via twilio with SID: ' + message.sid)
 
     return
+
+# establish event that catches the cooldown error and sends it as a message
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandOnCooldown):
+        cooldown = error.retry_after
+        cooldown_formatted = time.strftime('%H:%M:%S', time.gmtime(cooldown))
+        await ctx.send('This command is on cooldown right now. You can use it again in ' + cooldown_formatted + '.')
+    raise error
 
 # creates event that prints console output as soon as bot connects to discord
 @bot.event
