@@ -297,14 +297,8 @@ async def addgame(ctx):
 
     author = ctx.message.author.name
     game_wish = ctx.message.content[9:]
-    record = 'New game suggestion from >addgame command: ' + author + ';' + game_wish + '\n'
+    record = author + ' suggested the game ' + game_wish + ' via the \'>addgame\' command.'
 
-    # Old method using a file
-    # f = open("gamesuggestions.txt", "a+")
-    # f.write(record)
-    # f.close()
-
-    # New method POSTing to a slack webhook
     webhook_url = 'https://hooks.slack.com/services/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'
     slack_data = {
                  'text': record,
