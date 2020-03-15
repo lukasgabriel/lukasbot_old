@@ -317,8 +317,7 @@ async def addresses(ctx):
 @start.bot.command(name='sms', help='Send an SMS. Format your request like so:  MESSAGE : RECIPIENT  -  you can view the command\'s address book with the \'>addresses\' command.')
 @commands.cooldown(4, 3600, commands.BucketType.guild) # Command can be used four times per hour before triggering a server-wide cooldown of 1 hour.
 async def sms(ctx):
-    
-    # TODO: Instead of manually specifying phone number, add a phonebook with approved numbers and pick number from there according to name in command call.
+
     # TODO: Create webhook to receive and forward replies to discord channels.
     # TODO: Implement tracking of SMS delivery status via webhook.
     # TODO: Create reminder functionality to let users set SMS reminders for themselves.
