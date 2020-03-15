@@ -1,6 +1,5 @@
 discord.py
 flask
-logging
 requests
 json
 PyJWT
