@@ -1,4 +1,4 @@
 discord.py
 thisapidoesnotexist
-dotenv
+python-dotenv
 fortune
