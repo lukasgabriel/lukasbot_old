@@ -10,6 +10,9 @@ This module establishes the connection to discord and sets the basic variables.
 import os
 from dotenv import load_dotenv
 
+import requests
+import json
+
 # Discord Python Library
 import discord
 from discord.ext import commands
