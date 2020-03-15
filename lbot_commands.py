@@ -9,6 +9,9 @@ This module contains the custom commands that the bot is able to perform.
 import datetime
 import random
 
+import requests
+import json
+
 import lbot_start as start
 
 # Discord Python Library
@@ -294,15 +297,36 @@ async def addgame(ctx):
 
     author = ctx.message.author.name
     game_wish = ctx.message.content[9:]
-    record = author + ';' + game_wish + '\n'
+    record = 'New game suggestion from >addgame command: ' + author + ';' + game_wish + '\n'
 
-    f = open("gamesuggestions.txt", "a+")
-    f.write(record)
-    f.close()
+    # Old method using a file
+    # f = open("gamesuggestions.txt", "a+")
+    # f.write(record)
+    # f.close()
 
-    response = author + ', you added \'' + game_wish + '\' to the list. Thank you for your suggestion!'
+    # New method POSTing to a slack webhook
+    webhook_url = 'https://hooks.slack.com/services/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'
+    slack_data = {
+                 'text': record,
+                 'username': 'lukasbot-discord',
+                 'icon_url': 'https://github.com/lukasgabriel/lukasbot/blob/master/media/avatar.png',
+                 'channel': '#lukasbot-discord'
+                 }
 
-    await ctx.send(response)
+    response = requests.post(
+        webhook_url, data=json.dumps(slack_data),
+        headers={'Content-Type': 'application/json'}
+    )
+    
+    if response.status_code != 200:
+        raise ValueError(
+            'Request to slack returned an error %s, the response is:\n%s'
+            % (response.status_code, response.text)
+        )
+
+    msgresponse = author + ', you added \'' + game_wish + '\' to the list. Thank you for your suggestion!'
+
+    await ctx.send(msgresponse)
 
 # '>kms' - kills yourself
 @start.bot.command(name='kms', help='Allows you to kill yourself.')
