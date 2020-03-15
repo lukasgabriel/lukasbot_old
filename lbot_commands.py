@@ -9,9 +9,6 @@ This module contains the custom commands that the bot is able to perform.
 import datetime
 import random
 
-import requests
-import json
-
 import lbot_start as start
 
 # Discord Python Library
