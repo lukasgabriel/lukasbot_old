@@ -1,4 +1,5 @@
 discord.py
+requests
 thisapidoesnotexist
 python-dotenv
 fortune
