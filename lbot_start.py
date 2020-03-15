@@ -66,7 +66,7 @@ def slack_post(msg):
 def get_number(recipient):
 
     if recipient in address_book:
-        number = address_book['recipient']
+        number = address_book[recipient]
         return number
     else:
         return None
