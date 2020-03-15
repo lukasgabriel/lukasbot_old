@@ -1,1 +1,1 @@
-web: lbot.py 
+worker: lbot.py 
