@@ -40,8 +40,15 @@ bot = commands.Bot(command_prefix=comm_prefix)
 
 # send POST request to Slack webhook to post the msg to the Slack channel.
 def slack_post(msg):
+        
+    try:
+        load_dotenv()
+        SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL')
+    except:
+        print('Error: No Slack Webhook URL found in environment variables!')
+        raise EnvironmentError
     
-    webhook_url = 'https://hooks.slack.com/services/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'
+    webhook_url = SLACK_WEBHOOK_URL
     slack_data = {
                  'text': msg,
                  'username': 'lukasbot-discord',
