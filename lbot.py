@@ -6,7 +6,7 @@
 import lbot_start as start
 
 # the module that contains the commands
-import lbot_commands as comms
+import lbot_commands as cmd
 
 # call function that doesn the starting
 start.lbot()
