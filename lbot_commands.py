@@ -83,7 +83,7 @@ async def hello(ctx):
 @start.bot.command(name='about', help='Lukas made a bot. Tell him how cool that is, right now. Tell him how proud you are.')
 async def about(ctx):
     
-    response = 'I was made by the glorious @floymotive#1337 to serve him and his friends. He told me he would beat up anyone who is mean to me, so watch out.'
+    response = 'I was made by the glorious @floymotive#1337 to serve him and his friends. He told me he would beat up anyone who is mean to me, so watch out. \n View my source code at https://github.com/lukasgabriel/lukasbot'
 
     await ctx.send(response)
 
