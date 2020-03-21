@@ -29,7 +29,8 @@ address_book = {
         'Sascha' : '+4915733350547',
         'Svenja' : '+491725923971',
         'Tolga' : '+4915783461039',
-        'Gafar' : '+4917668547754'
+        'Gafar' : '+4917668547754',
+        'Felix':'+4917656761234'
         }
 
 # include command prefix here
