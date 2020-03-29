@@ -3,6 +3,10 @@
 import os
 from dotenv import load_dotenv
 
+import hashlib
+import hmac
+import json
+
 import requests
 
 from flask import Flask
@@ -25,5 +29,17 @@ def twitch_callback():
     else:
         print(dict(request.headers))
         print(request.json)
+
+        signature = hmac.new(bytes(123456), request.data, hashlib.sha256).hexdigest()
+
+        if hmac.compare_digest(signature, request.headers['X-Hub-Signature'].split('=')[1]):
+            print('Signature verified.')
+
+        else:
+            print('Signature mismatch!')
+
         return 'Received.'
         #TODO: Handle incoming notifications.
+
+
+
