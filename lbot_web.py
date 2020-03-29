@@ -27,10 +27,12 @@ def twitch_callback():
         print('Challenge code received. Returning...')
         return challenge
     else:
-        print(dict(request.headers))
-        print(request.json)
+        print(request.headers['X-Hub-Signature'])
+        print(request.data.encode('utf-8'))
 
-        signature = hmac.new(bytes(123456), request.data, hashlib.sha256).hexdigest()
+        signature = hmac.new(bytes(123456), bytes(request.data.encode('utf-8')), hashlib.sha256).hexdigest()
+        print(bytes(123456))
+        print(bytes(requests.data.encode('utf-8')))
 
         if hmac.compare_digest(signature, request.headers['X-Hub-Signature'].split('=')[1]):
             print('Signature verified.')
