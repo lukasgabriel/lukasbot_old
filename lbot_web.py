@@ -31,9 +31,9 @@ def twitch_callback():
         check = request.data
         print(check)
 
-        signature = hmac.new(bytes(123456), check, hashlib.sha256).hexdigest()
+        signature = hmac.new('123456', check, hashlib.sha256).hexdigest()
         print(bytes(123456))
-        print(check)
+        print(signature)
 
         if hmac.compare_digest(signature, request.headers['X-Hub-Signature'].split('=')[1]):
             print('Signature verified.')
