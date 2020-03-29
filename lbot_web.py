@@ -16,4 +16,5 @@ def twitch_callback():
         print('Challenge is: {0}'.format(challenge))
         return challenge
     else:
-        print('Error: Expected GET request, received POST request instead.')
+        print(request)
+        return
