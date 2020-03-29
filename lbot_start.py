@@ -20,6 +20,8 @@ from twilio.rest import Client
 import discord
 from discord.ext import commands
 
+load_dotenv()
+
 # telephone number address book for sms commands
 address_book = {
         'Alex' : '+4917621214313',
@@ -43,7 +45,6 @@ bot = commands.Bot(command_prefix=comm_prefix)
 def slack_post(msg):
         
     try:
-        load_dotenv()
         SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL')
     except:
         print('Error: No Slack Webhook URL found in environment variables!')
@@ -85,14 +86,12 @@ def get_number(recipient):
 def sms_msg(msg, number, author):
 
     try:
-        load_dotenv()
         TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
     except:
         print('Error: No Twilio Account SID found in environment variables!')
         raise EnvironmentError
 
     try:
-        load_dotenv()
         TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
     except:
         print('Error: No Twilio Auth Token found in environment variables!')
@@ -130,7 +129,6 @@ async def on_ready():
 def lbot():
     # load the global variable for the discord token from the env variables
     try:
-        load_dotenv()
         DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
     except:
         print('Error: No Discord Token found in environment variables!')
