@@ -23,8 +23,7 @@ def twitch_callback():
         print('Challenge code received. Returning...')
         return challenge
     else:
+        print(dict(request.headers))
         print(request.json)
-        print(request.data)
-        print(request.form)
         return 'Received.'
         #TODO: Handle incoming notifications.
