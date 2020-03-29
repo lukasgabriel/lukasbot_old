@@ -1,8 +1,11 @@
 discord.py
 flask
+django
 requests
 PyJWT
 twilio
 thisapidoesnotexist
 python-dotenv
 fortune
+gunicorn
+django-heroku
