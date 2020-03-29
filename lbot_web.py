@@ -9,6 +9,7 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello, World!'
 
+# TODO: Verify hash of response
 @app.route('/twitchapi/webhooks/callback/', methods=['GET', 'POST'])
 def twitch_callback():
     if request.method == 'GET':
@@ -17,4 +18,4 @@ def twitch_callback():
         return challenge
     else:
         print(request)
-        return
+        return 'Received.'
