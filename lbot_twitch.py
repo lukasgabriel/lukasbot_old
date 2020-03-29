@@ -56,9 +56,7 @@ def twitch_sub2webhook(mode, topic, lease):
     callback_target = CALLBACK_URL + '/twitchapi/webhooks/callback/'
     TWITCH_WEBHOOK_HUB = TWITCH_API + '/webhooks/hub/'
 
-    # temp_secret = token_urlsafe()
-    temp_secret = '123456'
-    # os.environ['TEMP_SECRET'] = temp_secret
+    temp_secret = token_urlsafe()
 
     params = {'hub.mode': mode, 'hub.topic': TWITCH_API + topic,
               'hub.callback': callback_target, 'hub.lease_seconds': lease, 'hub.secret': temp_secret}
@@ -74,4 +72,4 @@ def twitch_sub2webhook(mode, topic, lease):
     return response
 
 
-twitch_sub2webhook('subscribe', '/users/follows?first=1&from_id=24238947', '300')
+# twitch_sub2webhook('subscribe', '/users/follows?first=1&from_id=24238947', '300')
