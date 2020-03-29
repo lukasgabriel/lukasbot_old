@@ -1,8 +1,13 @@
 # lbot_web.py
 
+import os
+from dotenv import load_dotenv
+
 import requests
+
 from flask import Flask
 from flask import request
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -12,10 +17,12 @@ def hello_world():
 # TODO: Verify hash of response
 @app.route('/twitchapi/webhooks/callback/', methods=['GET', 'POST'])
 def twitch_callback():
+
     if request.method == 'GET':
         challenge = request.args.get('hub.challenge')
-        print('Challenge is: {0}'.format(challenge))
+        print('Challenge code received. Returning...')
         return challenge
     else:
-        print(request)
+        print(request.json)
         return 'Received.'
+        #TODO: Handle incoming notifications.
