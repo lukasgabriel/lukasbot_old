@@ -34,6 +34,7 @@ def twitch_callback():
         received_json = request.json
         received_bytes = request.data
         print('Notification received. Checking signature...')
+        os.environ['TEMP_SECRET'] = '7ebab295bbfc3dae' # DEBUGGING
 
         try:
             load_dotenv()
