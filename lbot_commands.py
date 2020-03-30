@@ -9,6 +9,13 @@ This module contains the custom commands that the bot is able to perform.
 import datetime
 import random
 
+# For HTTPError class
+import urllib
+
+# Module by me that interacts with the Twitch API.
+import lbot_twitch as lt
+
+# Module by me that initializes the bot and contains variables.
 import lbot_start as start
 
 # Discord Python Library
@@ -21,8 +28,7 @@ from thisapidoesnotexist import get_cat, get_person
 # Returns quotes for the cookie command
 import fortune
 
-# Module by me that interacts with the Twitch API.
-import lbot_twitch as lt
+
 
 # if unexpected behavior occurs, we don't want to ignore it, but the bot should not stop either
 # instead, we just include a print(ERR_RESPONSE) as fallback so we have feedback
@@ -39,6 +45,14 @@ class InputError(Error):
     def __init__(self, expression, message):
         self.expression = expression
         self.message = message
+
+class APIError(Error):
+    # Exception raised if an API call returns an HTTP error.
+    def __init__(self, code, url, headers, msg):
+        self.code = code
+        self.url = url
+        self.headers = headers
+        self.msg = msg
 
 
 '''
@@ -371,7 +385,6 @@ async def sms(ctx):
 @commands.cooldown(2, 86500, commands.BucketType.guild)
 async def twitch_notify(ctx):
     command_raw = ctx.message.content[15:]
-    HTTPError = lt.requests.HTTPError
 
     try:
         streamer = command_raw.split(':', 1)[0].strip()
@@ -396,11 +409,10 @@ async def twitch_notify(ctx):
         if response.status_code == '202':
             msgresponse = f'You\'ve successfully enabled notifcations to channel updates from {streamer} for {duration}.'
         else:
-            raise HTTPError(url=topic, code=response.status_code,
-                            hdrs=response.headers)
+            raise APIError(code=response.status_code, url=topic, headers=response.headers, msg=response.reason)
 
-    except(HTTPError):
-        msgresponse = 'Something went wrong. Error:' + response.status_code
+    except(APIError):
+        msgresponse = f'Something went wrong. Error: {response.status_code} - {response.reason}'
     except():
         msgresponse = 'Invalid command format. Use \'>help twitch_notify\' for more info.'
 
