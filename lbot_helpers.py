@@ -16,6 +16,5 @@ class APIError(Error):
 
 class InputError(Error):
     # Exception raised for errors in the input.
-    def __init__(self, expression, message):
-        self.expression = expression
+    def __init__(self, message):
         self.message = message

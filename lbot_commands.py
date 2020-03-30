@@ -379,7 +379,7 @@ async def twitch_notify(ctx):
             mode = 'unsubscribe'
             mode_state = 'disabled'
         else:
-            raise lh.InputError('if \'on\' in mode_raw:', 'InputError')
+            raise lh.InputError(message='Invalid command format. Use \'>help twitch_notify\' for more info.')
 
         # TODO: Add auto-renewal feature; for now, we'll use the Twitch API maximum of 10 days.
         lease = 864000
@@ -403,7 +403,9 @@ async def twitch_notify(ctx):
 
     except lh.APIError as err:
         msgresponse = f'Something went wrong. Error {err.code} - {err.msg}'
-    except(lh.InputError, TypeError, KeyError, ValueError, SyntaxError, IndexError):
+    except lh.InputError as err:
+        msgresponse = f'Input Error: {err.message}'
+    except(TypeError, KeyError, ValueError, SyntaxError, IndexError):
         msgresponse = 'Invalid command format. Use \'>help twitch_notify\' for more info.'
     except():
         msgresponse = 'Unspecified error. @bot_dad'

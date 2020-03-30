@@ -90,10 +90,12 @@ def get_user_id(name):
 
         request = requests.get(url=url, headers=header, params=params)
         response = request
-
+        
         # print(response.json) # DEBUGGING
         user_id = response.json()['data'][0]['id']
-    except():
+    except IndexError:
+        raise lh.InputError(message='User not found.')
+    except:
         raise lh.APIError(response.status_code, url,
                           response.headers, response.reason, response.text)
 
