@@ -28,6 +28,7 @@ def twitch_callback():
         print('Challenge code received. Returning...')
         return challenge
 
+    # TODO: Move signature verification to its own function.
     else:
         received_sig = request.headers['X-Hub-Signature']
         # print(received_sig) # DEBUGGING
@@ -40,6 +41,7 @@ def twitch_callback():
         try:
             load_dotenv()
             temp_secret = os.environ['TEMP_SECRET']
+            # TODO: Reading TEMP_KEY from file so it gets generated and handed over by lbot_twitch.py
             # print(temp_secret) # DEBUGGING
         except:
             print('No temporary secret found in environment variables.')
