@@ -48,8 +48,12 @@ def get_twitch_token():
     params = {'client_id': TWITCH_CLIENT_ID,
               'client_secret': TWITCH_CLIENT_SECRET, 'grant_type': 'client_credentials'}
 
-    request = requests.post(TWITCH_AUTH_URL, params=params)
-    response = request
+    try:
+        request = requests.post(TWITCH_AUTH_URL, params=params)
+        response = request
+    except:
+        raise lh.APIError(response.status_code, TWITCH_AUTH_URL,
+                          response.headers, response.reason, response.text)
 
     return response
 
@@ -59,18 +63,25 @@ def revoke_twitch_token(token):
     params = {'client_id': TWITCH_CLIENT_ID,
               'token': token}
 
-    request = requests.post(TWITCH_REVOKE_URL, params=params)
-    response = request
+    try:
+        request = requests.post(TWITCH_REVOKE_URL, params=params)
+        response = request
+    except:
+        raise lh.APIError(response.status_code, TWITCH_REVOKE_URL,
+                          response.headers, response.reason, response.text)
 
     print(response)
     return response
+
+# TODO: renew_twitch_token function, storing tokens in file
 
 
 def get_user_id(name):
     apptoken = TWITCH_APP_TOKEN
     url = TWITCH_API + '/users'
 
-    # Right now, we have to renew the app token by hand every 60 days. TODO: Auto-renewal of app access token.
+    # Right now, we have to renew the app token by hand every 60 days.
+    # TODO: Auto-renewal of app access token.
 
     try:
         params = {'login': name}
@@ -82,9 +93,9 @@ def get_user_id(name):
 
         # print(response.json) # DEBUGGING
         user_id = response.json()['data'][0]['id']
-    except:
+    except():
         raise lh.APIError(response.status_code, url,
-                          response.headers, response.reason)
+                          response.headers, response.reason, response.text)
 
     return user_id
 
@@ -96,6 +107,7 @@ def twitch_sub2webhook(mode, topic, lease):
     # temp_secret = token_hex(nbytes=8)
     # temp_secret = '' # DEBUGGING
     # os.environ['TEMP_SECRET'] = temp_secret # Causes problems on heroku
+    # TODO: Store fresh TEMP_KEY in file and hand over to lbot_web.py for signature verification.
 
     try:
         load_dotenv()
@@ -118,3 +130,4 @@ def twitch_sub2webhook(mode, topic, lease):
     # print(response)  # DEBUGGING
     # print(response.reason)  # DEBUGGING
     return response
+    # TODO: Handle incoming notifications and forward to discord bot (send msg).
