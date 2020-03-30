@@ -30,6 +30,8 @@ def twitch_callback():
     else:
         print(request.headers['X-Hub-Signature'])
         print(request.json)
+        print(request.form)
+        print(request.data)
         return 'Received.'
 
         #TODO: Handle incoming notifications.
