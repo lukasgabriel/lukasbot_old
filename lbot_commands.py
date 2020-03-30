@@ -356,5 +356,37 @@ async def sms(ctx):
 
     await ctx.send(msgresponse)
 
+# '>twitch_notify' - establishes notification for stream events (went live, went offline) for specified channel.
+@start.bot.command(name='twitch_notify', help='Currently WIP. Format your command like so: STREAMER_NAME : [on/off]')
+@commands.cooldown(2, 86500, commands.BucketType.guild) # Command can be used twice per day before triggering a 24-hour cooldown.
+async def twitch_notify(ctx):
+    command_raw = ctx.message.content[15:]
 
+    try:
+        streamer = command_raw.split(':', 1)[0].strip()
+        mode_raw = command_raw.rsplit(':', 1)[1].strip()
+
+        if 'on' in mode_raw:
+            mode = 'subscribe'
+        elif 'off' in mode_raw:
+            mode = 'unsubscribe'
+        else:
+            raise InputError
+
+        lease =  865000 # Might add auto-renewal feature; for now, we'll use the Twitch API maximum of 10 days.
+        duration = '{:0>8}'.format(str(timedelta(seconds=lease)))
+        
+        topic = lt.TWITCH_API + '/streams?user_login=' + streamer # Could be changed to notify of other events.
+
+        response = lt.twitch_sub2webhook(mode, topic, lease)
+
+        if response.status_code == requests.codes.ok:
+            msgresponse = f'You\'ve successfully enabled notifcations to channel updates from {streamer} for {duration}.' 
+        else:
+            msgresponse = 'Something went wrong.'
+
+    except(VaueError):
+        msgresponse = 'Invalid command format. Use \'>help twitch_notify\' for more info.'
+        
+    await ctx.send(msgresponse)
 
