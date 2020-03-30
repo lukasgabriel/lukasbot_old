@@ -3,7 +3,7 @@
 import os
 from dotenv import load_dotenv
 import requests
-from secrets import token_urlsafe
+from secrets import token_hex
 import hmac, hashlib, json, time, base64
 
 load_dotenv()
@@ -56,7 +56,9 @@ def twitch_sub2webhook(mode, topic, lease):
     callback_target = CALLBACK_URL + '/twitchapi/webhooks/callback/'
     TWITCH_WEBHOOK_HUB = TWITCH_API + '/webhooks/hub/'
 
-    temp_secret = token_urlsafe()
+    temp_secret = token_hex(nbytes=8)
+    # temp_secret = '' # DEBUGGING
+    os.environ['TEMP_SECRET'] = temp_secret
 
     params = {'hub.mode': mode, 'hub.topic': TWITCH_API + topic,
               'hub.callback': callback_target, 'hub.lease_seconds': lease, 'hub.secret': temp_secret}
@@ -71,5 +73,3 @@ def twitch_sub2webhook(mode, topic, lease):
     print(response)
     return response
 
-
-# twitch_sub2webhook('subscribe', '/users/follows?first=1&from_id=24238947', '300')
