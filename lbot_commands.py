@@ -364,7 +364,7 @@ async def sms(ctx):
 # '>twitch_notify' - establishes notification for stream events (went live, went offline) for specified channel.
 @start.bot.command(name='twitch_notify', help='Currently WIP. Format your command like so: STREAMER_NAME : [on/off]')
 # Command can be used twice per day before triggering a (almost) 24-hour cooldown.
-@commands.cooldown(2, 86000, commands.BucketType.guild)
+@commands.cooldown(4, 86000, commands.BucketType.guild)
 async def twitch_notify(ctx):
     command_raw = ctx.message.content[15:]
 
