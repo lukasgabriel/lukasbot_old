@@ -24,16 +24,16 @@ load_dotenv()
 
 # telephone number address book for sms commands
 address_book = {
-        'Alex' : '+4917621214313',
-        'Tommi' : '+4915733709805',
-        'Lukas' : '+491623424473',
-        'Gabri' : '+4915732612200',
-        'Sascha' : '+4915733350547',
-        'Svenja' : '+491725923971',
-        'Tolga' : '+4915783461039',
-        'Gafar' : '+4917668547754',
-        'Felix':'+4917656761234'
-        }
+    'Alex': '+4917621214313',
+    'Tommi': '+4915733709805',
+    'Lukas': '+491623424473',
+    'Gabri': '+4915732612200',
+    'Sascha': '+4915733350547',
+    'Svenja': '+491725923971',
+    'Tolga': '+4915783461039',
+    'Gafar': '+4917668547754',
+    'Felix': '+4917656761234'
+}
 
 # include command prefix here
 comm_prefix = '>'
@@ -42,27 +42,29 @@ comm_prefix = '>'
 bot = commands.Bot(command_prefix=comm_prefix)
 
 # send POST request to Slack webhook to post the msg to the Slack channel.
+
+
 def slack_post(msg):
-        
+
     try:
         SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL')
     except:
         print('Error: No Slack Webhook URL found in environment variables!')
         raise EnvironmentError
-    
+
     webhook_url = SLACK_WEBHOOK_URL
     slack_data = {
-                 'text': msg,
-                 'username': 'lukasbot-discord',
-                 'icon_url': 'https://github.com/lukasgabriel/lukasbot/blob/master/media/avatar.png',
-                 'channel': '#lukasbot-discord'
-                 }
+        'text': msg,
+        'username': 'lukasbot-discord',
+        'icon_url': 'https://github.com/lukasgabriel/lukasbot/blob/master/media/avatar.png',
+        'channel': '#lukasbot-discord'
+    }
 
     response = requests.post(
         webhook_url, data=json.dumps(slack_data),
         headers={'Content-Type': 'application/json'}
     )
-    
+
     if response.status_code != 200:
         raise ValueError(
             'Request to slack returned an error %s, the response is:\n%s'
@@ -72,8 +74,10 @@ def slack_post(msg):
     return
 
 # get number of recipient from address book
+
+
 def get_number(recipient):
-        
+
     recipient_t = recipient.title()
 
     if recipient_t in address_book:
@@ -83,6 +87,8 @@ def get_number(recipient):
         return None
 
 # send SMS via twilio API
+
+
 def sms_msg(msg, number, author):
 
     try:
@@ -100,8 +106,8 @@ def sms_msg(msg, number, author):
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
     message = client.messages.create(body=msg,
-                        from_='+12055573240',
-                        to=number)
+                                     from_='+12055573240',
+                                     to=number)
 
     slack_post('SMS message sent via twilio with SID: ' + message.sid)
 
@@ -120,12 +126,14 @@ async def on_command_error(ctx, error):
 @bot.event
 async def on_ready():
     print(f'{bot.user.name} has connected to Discord!')
-    
+
     msg = 'I\'ve just connected to Discord.'
-    
+
     slack_post(msg)
-    
+
 # function that does the actual 'starting'
+
+
 def lbot():
     # load the global variable for the discord token from the env variables
     try:
