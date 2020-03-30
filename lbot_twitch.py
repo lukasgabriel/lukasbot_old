@@ -56,9 +56,17 @@ def twitch_sub2webhook(mode, topic, lease):
     callback_target = CALLBACK_URL + '/twitchapi/webhooks/callback/'
     TWITCH_WEBHOOK_HUB = TWITCH_API + '/webhooks/hub/'
 
-    temp_secret = token_hex(nbytes=8)
+    # temp_secret = token_hex(nbytes=8)
     # temp_secret = '' # DEBUGGING
-    os.environ['TEMP_SECRET'] = temp_secret
+    # os.environ['TEMP_SECRET'] = temp_secret # Causes problems on heroku
+
+    try:
+        load_dotenv()
+        temp_secret = os.environ['TEMP_SECRET']
+        # print(temp_secret) # DEBUGGING
+    except:
+        print('No temporary secret found in environment variables.')
+        raise EnvironmentError
 
     params = {'hub.mode': mode, 'hub.topic': TWITCH_API + topic,
               'hub.callback': callback_target, 'hub.lease_seconds': lease, 'hub.secret': temp_secret}
