@@ -114,7 +114,7 @@ def twitch_sub2webhook(mode, topic, lease):
     request = requests.post(TWITCH_WEBHOOK_HUB, headers=header, params=params)
     response = request
 
-    print(params, header)  # DEBUGGING
-    print(response)  # DEBUGGING
-    print(response.reason)  # DEBUGGING
+    # print(params, header)  # DEBUGGING
+    # print(response)  # DEBUGGING
+    # print(response.reason)  # DEBUGGING
     return response
