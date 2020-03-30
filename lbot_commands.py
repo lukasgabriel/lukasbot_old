@@ -28,15 +28,18 @@ import lbot_twitch as lt
 # instead, we just include a print(ERR_RESPONSE) as fallback so we have feedback
 err_response = 'BLEEP BLOOP I\'M MALFUNCTIONING PLEASE CALL MY CREATOR @flyomotive TO FIX ME!'
 
+
 class Error(Exception):
     # Base class for exceptions in this module.
     pass
+
 
 class InputError(Error):
     # Exception raised for errors in the input.
     def __init__(self, expression, message):
         self.expression = expression
         self.message = message
+
 
 '''
 This is where we register each command
@@ -45,13 +48,13 @@ This is where we register each command
 # '>hello' - the bot answers to 'hello' with a daytime-specific greeting
 @start.bot.command(name='hello', help='You should show some manners and greet the bot. He is our humble servant after all.')
 async def hello(ctx):
-    
+
     response = err_response
     author = ctx.message.author.name
-    
+
     greetings_earlymorning = [
         'Good morning, ' + author + '.',
-        'Up early, '+ author + '?',
+        'Up early, ' + author + '?',
     ]
     greetings_morning = [
         'Good morning,' + author + '.',
@@ -95,15 +98,15 @@ async def hello(ctx):
 # '>about' - returns a short description of the bot and its author
 @start.bot.command(name='about', help='Lukas made a bot. Tell him how cool that is, right now. Tell him how proud you are.')
 async def about(ctx):
-    
+
     response = 'I was made by the glorious @floymotive#1337 to serve him and his friends. He told me he would beat up anyone who is mean to me, so watch out. \n View my source code at https://github.com/lukasgabriel/lukasbot'
 
     await ctx.send(response)
 
-#'>listcommands' - lists all commands that are currently implemented
+# '>listcommands' - lists all commands that are currently implemented
 @start.bot.command(name='listcommands', help='Lists all commands with a short description of their functionality.')
 async def listcommands(ctx):
-    
+
     # TODO: Find a way to return this dict looking nice.
     # cmdlist = {
     #     '>about' : 'I will tell you about myself. This is one of my favorite commands. \n',
@@ -129,7 +132,7 @@ async def vibecheck(ctx):
 # '>goodbot' - users can compliment the bot and it will answer with one grateful message from the list
 @start.bot.command(name='goodbot', help=':)')
 async def goodbot(ctx):
-    
+
     # TODO: add a 'badbot' command with a field for 'reason' and corresponding 'score' for the bot for feedback
     goodbottie = [
         'Thank you :)',
@@ -144,7 +147,7 @@ async def goodbot(ctx):
         'Thank you so much.',
         'Thanks, I appreciate it.',
         'Thank you!'
-        ]
+    ]
 
     response = random.choice(goodbottie)
 
@@ -175,7 +178,7 @@ async def bye(ctx):
 # '>cat' - pulls a generated cat picture via 'thisapidoesnotexist', saves it temporarily and sends it to the context
 @start.bot.command(name='cat', help='Shows you a picture of a cat that doesn\'t exist. A fictious feline.')
 async def cat(ctx):
-    
+
     cat = get_cat()
 
     cat.save_image('media\\temp\cat.jpeg')
@@ -185,7 +188,7 @@ async def cat(ctx):
 # '>person' - pulls a generated 'person' picture via 'thisapidoesnotexist', saves it temporarily and sends it to the context
 @start.bot.command(name='person', help='Shows you a picture of a person that doesn\'t exist.')
 async def person(ctx):
-    
+
     person = get_person()
 
     person.save_image('media\\temp\person.jpeg')
@@ -193,9 +196,9 @@ async def person(ctx):
     await ctx.send(file=discord.File('media\\temp\person.jpeg'))
 
 # '>calc' - a calculator, because people requested that
-#@start.bot.command(name='calc', help='A calculator. Use x+y and x-y for addition and subtraction; x*y and x/y for multiplication and division; x**n for x to the power of n and ''n r x'' for the nth root of x; x//y for floor division and %\x for the modulo operation; x! for x factorial and ''x o n'' for x over n (binomial coefficient); ''x gcd y'' returns the greatest common divisor of x and y.')
-#async def calc(ctx):
-#    
+# @start.bot.command(name='calc', help='A calculator. Use x+y and x-y for addition and subtraction; x*y and x/y for multiplication and division; x**n for x to the power of n and ''n r x'' for the nth root of x; x//y for floor division and %\x for the modulo operation; x! for x factorial and ''x o n'' for x over n (binomial coefficient); ''x gcd y'' returns the greatest common divisor of x and y.')
+# async def calc(ctx):
+#
 #    person = get_person()
 #
 #    person.save_image('media\\temp\person.jpeg')
@@ -294,10 +297,11 @@ async def whattoplay(ctx):
         'GeoGuessr',
         'MS Paint Adventures',
         'Town of Salem',
-        'Fallout 76   .....just kidding lmao, don\'t fucking touch that game with a 100 ft pole'            
+        'Fallout 76   .....just kidding lmao, don\'t fucking touch that game with a 100 ft pole'
     ]
 
-    response = 'Hmmm, let me think...  today, you could play ' + random.choice(mp_games) + '!'
+    response = 'Hmmm, let me think...  today, you could play ' + \
+        random.choice(mp_games) + '!'
 
     await ctx.send(response)
 
@@ -307,11 +311,13 @@ async def addgame(ctx):
 
     author = ctx.message.author.name
     game_wish = ctx.message.content[9:]
-    record = author + ' suggested the game ' + game_wish + ' via the \'>addgame\' command.'
+    record = author + ' suggested the game ' + \
+        game_wish + ' via the \'>addgame\' command.'
 
     start.slack_post(record)
-    
-    msgresponse = author + ', you added \'' + game_wish + '\' to the list. Thank you for your suggestion!'
+
+    msgresponse = author + ', you added \'' + game_wish + \
+        '\' to the list. Thank you for your suggestion!'
 
     await ctx.send(msgresponse)
 
@@ -322,13 +328,14 @@ async def addresses(ctx):
     recipients = ''
 
     for key in start.address_book:
-        recipients += '  -  ' + key 
+        recipients += '  -  ' + key
 
     await ctx.send('The following recipients are available:' + recipients)
 
 # '>sms' - send sms via twilio
 @start.bot.command(name='sms', help='Send an SMS. Format your request like so:  MESSAGE : RECIPIENT  -  you can view the command\'s address book with the \'>addresses\' command.')
-@commands.cooldown(2, 7200, commands.BucketType.guild) # Command can be used two times per 120 minutes before triggering a server-wide cooldown of 2 hours.
+# Command can be used two times per 120 minutes before triggering a server-wide cooldown of 2 hours.
+@commands.cooldown(2, 7200, commands.BucketType.guild)
 async def sms(ctx):
 
     # TODO: Create webhook to receive and forward replies to discord channels.
@@ -339,14 +346,16 @@ async def sms(ctx):
         author = ctx.message.author.name
         msg_raw = ctx.message.content[4:]
 
-        msg = 'Message from ' + author + ': ' + msg_raw.rsplit(':', 1)[0].strip()
+        msg = 'Message from ' + author + ': ' + \
+            msg_raw.rsplit(':', 1)[0].strip()
         recipient_raw = msg_raw.rsplit(':', 1)[1]
         recipient = recipient_raw.strip()
         number = start.get_number(recipient)
 
         if number != None:
             start.sms_msg(msg, number, author)
-            start.slack_post('SMS request received from ' + author + ' to ' + recipient + ' with message: ' + msg_raw.rsplit(':', 1)[0])
+            start.slack_post('SMS request received from ' + author + ' to ' +
+                             recipient + ' with message: ' + msg_raw.rsplit(':', 1)[0])
             msgresponse = 'Outbound SMS request received.'
         else:
             msgresponse = 'Recipient not found in address book. Check your spelling or have a look at the address book with \'>addresses\'.'
@@ -358,9 +367,11 @@ async def sms(ctx):
 
 # '>twitch_notify' - establishes notification for stream events (went live, went offline) for specified channel.
 @start.bot.command(name='twitch_notify', help='Currently WIP. Format your command like so: STREAMER_NAME : [on/off]')
-@commands.cooldown(2, 86500, commands.BucketType.guild) # Command can be used twice per day before triggering a 24-hour cooldown.
+# Command can be used twice per day before triggering a 24-hour cooldown.
+@commands.cooldown(2, 86500, commands.BucketType.guild)
 async def twitch_notify(ctx):
     command_raw = ctx.message.content[15:]
+    HTTPError = lt.requests.HTTPError
 
     try:
         streamer = command_raw.split(':', 1)[0].strip()
@@ -373,20 +384,24 @@ async def twitch_notify(ctx):
         else:
             raise InputError
 
-        lease =  865000 # Might add auto-renewal feature; for now, we'll use the Twitch API maximum of 10 days.
+        # Might add auto-renewal feature; for now, we'll use the Twitch API maximum of 10 days.
+        lease = 865000
         duration = '{:0>8}'.format(str(datetime.timedelta(seconds=lease)))
-        
-        topic = lt.TWITCH_API + '/streams?user_login=' + streamer # Could be changed to notify of other events.
+
+        # Could be changed to notify of other events.
+        topic = lt.TWITCH_API + '/streams?user_login=' + streamer
 
         response = lt.twitch_sub2webhook(mode, topic, lease)
 
-        if response.status_code == lt.requests.codes.ok:
-            msgresponse = f'You\'ve successfully enabled notifcations to channel updates from {streamer} for {duration}.' 
+        if response.status_code == '202':
+            msgresponse = f'You\'ve successfully enabled notifcations to channel updates from {streamer} for {duration}.'
         else:
-            msgresponse = 'Something went wrong.'
+            raise HTTPError(url=topic, code=response.status_code,
+                            hdrs=response.headers)
 
-    except(ValueError):
+    except(HTTPError):
+        msgresponse = 'Something went wrong. Error:' + response.status_code
+    except():
         msgresponse = 'Invalid command format. Use \'>help twitch_notify\' for more info.'
-        
-    await ctx.send(msgresponse)
 
+    await ctx.send(msgresponse)
