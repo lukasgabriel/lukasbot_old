@@ -28,6 +28,16 @@ import lbot_twitch as lt
 # instead, we just include a print(ERR_RESPONSE) as fallback so we have feedback
 err_response = 'BLEEP BLOOP I\'M MALFUNCTIONING PLEASE CALL MY CREATOR @flyomotive TO FIX ME!'
 
+class Error(Exception):
+    # Base class for exceptions in this module.
+    pass
+
+class InputError(Error):
+    # Exception raised for errors in the input.
+    def __init__(self, expression, message):
+        self.expression = expression
+        self.message = message
+
 '''
 This is where we register each command
 '''
@@ -346,25 +356,5 @@ async def sms(ctx):
 
     await ctx.send(msgresponse)
 
-# '>twitch_notify' - establishes notification for stream events (went live, went offline) for specified channel.
-@start.bot.command(name='twitch_notify', help='Currently WIP.')
-async def twitch_notify(ctx):
-    topic = ctx.message.content[15:]
 
-    response = lt.twitch_sub2webhook('subscribe', topic, 300)
-    await ctx.send(response)
 
-# '>cookie' - reads a fortune cookie quote to the user
-#@start.bot.command(name='cookie', help='Reads a fortune cookie quote to you.')
-#async def cookie(ctx):
-#
-#    try:
-#        start.load_dotenv()
-#        FORTUNE_FILE = start.os.getenv('FORTUNE_FILE')
-#    except:
-#        print('Error: No Fortune file path specified in environment variables!')
-#        raise EnvironmentError
-#
-#    response = exec(fortune)
-#
-#    await ctx.send(response)
