@@ -1,4 +1,7 @@
 discord.py
+hashlib
+hmac
+secrets
 flask
 django
 requests

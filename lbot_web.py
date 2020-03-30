@@ -28,10 +28,31 @@ def twitch_callback():
         return challenge
         
     else:
-        print(request.headers['X-Hub-Signature'])
-        print(request.json)
-        print(request.form)
-        print(request.data)
-        return 'Received.'
+        received_sig = request.headers['X-Hub-Signature'] # DEBUGGING
+        print(received_sig) # DEBUGGING
+        print(request.headers['Content-Length']) # DEBUGGING
+        received_json = request.json
+        received_bytes = request.data
+        print('Notification received. Checking signature...')
 
+        try:
+            load_dotenv()
+            temp_secret = os.environ['TEMP_SECRET']
+            print(temp_secret) # DEBUGGING
+        except:
+            print('No temporary secret found in environment variables.')
+            temp_secret = ''
+            raise EnvironmentError
+        
+        expected_sig = hmac.digest(bytes(temp_secret, 'utf-8'), received_bytes, 'sha256')
+        print(expected_sig)  # DEBUGGING
+
+        if expected_sig == received_sig.split('=')[1]:
+            print('Signature validated.')
+        else:
+            print('Signature invalid!')
+            received_json = None
+
+        os.environ['TEMP_SECRET'] = None
+        return 'Received.'
         #TODO: Handle incoming notifications.
