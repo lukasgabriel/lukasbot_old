@@ -14,6 +14,7 @@ from flask import request
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def hello_world():
     return 'Hello, World!'
@@ -26,7 +27,7 @@ def twitch_callback():
         challenge = request.args.get('hub.challenge')
         print('Challenge code received. Returning...')
         return challenge
-        
+
     else:
         received_sig = request.headers['X-Hub-Signature']
         # print(received_sig) # DEBUGGING
@@ -44,8 +45,9 @@ def twitch_callback():
             print('No temporary secret found in environment variables.')
             temp_secret = ''
             raise EnvironmentError
-        
-        expected_hmac = hmac.HMAC(bytes(temp_secret, 'utf-8'), received_bytes, 'sha256')
+
+        expected_hmac = hmac.HMAC(
+            bytes(temp_secret, 'utf-8'), received_bytes, 'sha256')
         expected_sig = expected_hmac.digest().hex()
         # print(expected_sig)  # DEBUGGING
 
@@ -57,4 +59,4 @@ def twitch_callback():
 
         os.environ['TEMP_SECRET'] = ''
         return 'Received.'
-        #TODO: Handle incoming notifications.
+        # TODO: Handle incoming notifications.
