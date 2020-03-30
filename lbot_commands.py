@@ -390,7 +390,7 @@ async def twitch_notify(ctx):
 
         response = lt.twitch_sub2webhook(mode, topic, lease)
 
-        if response.status_code == '202':
+        if response.status_code == 202:
             msgresponse = f'You\'ve successfully enabled notifcations to channel updates from {streamer_name} for {duration}.'
         else:
             raise lh.APIError(code=response.status_code, url=topic,
