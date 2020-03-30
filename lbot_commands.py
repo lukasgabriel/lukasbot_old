@@ -18,6 +18,9 @@ import lbot_twitch as lt
 # Module by me that initializes the bot and contains variables.
 import lbot_start as start
 
+# Module by me that contains some additional stuff but is used by other modules as well.
+import lbot_helpers as lh
+
 # Discord Python Library
 import discord
 from discord.ext import commands
@@ -29,30 +32,9 @@ from thisapidoesnotexist import get_cat, get_person
 import fortune
 
 
-
 # if unexpected behavior occurs, we don't want to ignore it, but the bot should not stop either
 # instead, we just include a print(ERR_RESPONSE) as fallback so we have feedback
 err_response = 'BLEEP BLOOP I\'M MALFUNCTIONING PLEASE CALL MY CREATOR @flyomotive TO FIX ME!'
-
-
-class Error(Exception):
-    # Base class for exceptions in this module.
-    pass
-
-
-class InputError(Error):
-    # Exception raised for errors in the input.
-    def __init__(self, expression, message):
-        self.expression = expression
-        self.message = message
-
-class APIError(Error):
-    # Exception raised if an API call returns an HTTP error.
-    def __init__(self, code, url, headers, msg):
-        self.code = code
-        self.url = url
-        self.headers = headers
-        self.msg = msg
 
 
 '''
@@ -387,33 +369,38 @@ async def twitch_notify(ctx):
     command_raw = ctx.message.content[15:]
 
     try:
-        streamer = command_raw.split(':', 1)[0].strip()
+        streamer_name = command_raw.split(':', 1)[0].strip()
         mode_raw = command_raw.rsplit(':', 1)[1].strip()
+
+        streamer_id = lt.get_user_id(streamer_name)
 
         if 'on' in mode_raw:
             mode = 'subscribe'
         elif 'off' in mode_raw:
             mode = 'unsubscribe'
         else:
-            raise InputError
+            raise lh.InputError('if \'on\' in mode_raw:', 'InputError')
 
         # Might add auto-renewal feature; for now, we'll use the Twitch API maximum of 10 days.
         lease = 865000
         duration = '{:0>8}'.format(str(datetime.timedelta(seconds=lease)))
 
         # Could be changed to notify of other events.
-        topic = '/streams?user_login=' + streamer
+        topic = '/streams?user_id=' + streamer_id
 
         response = lt.twitch_sub2webhook(mode, topic, lease)
 
         if response.status_code == '202':
-            msgresponse = f'You\'ve successfully enabled notifcations to channel updates from {streamer} for {duration}.'
+            msgresponse = f'You\'ve successfully enabled notifcations to channel updates from {streamer_name} for {duration}.'
         else:
-            raise APIError(code=response.status_code, url=topic, headers=response.headers, msg=response.reason)
+            raise lh.APIError(code=response.status_code, url=topic,
+                              headers=response.headers, msg=response.reason)
 
-    except(APIError):
+    except(lh.APIError):
         msgresponse = f'Something went wrong. Error: {response.status_code} - {response.reason}'
-    except():
+    except(lh.InputError, TypeError, KeyError, ValueError, SyntaxError):
         msgresponse = 'Invalid command format. Use \'>help twitch_notify\' for more info.'
+    except():
+        msgresponse = 'Unspecified error. @flyomotive'
 
     await ctx.send(msgresponse)
