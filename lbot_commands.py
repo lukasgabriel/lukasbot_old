@@ -21,6 +21,9 @@ from thisapidoesnotexist import get_cat, get_person
 # Returns quotes for the cookie command
 import fortune
 
+# Module by me that interacts with the Twitch API.
+import lbot_twitch as lt
+
 # if unexpected behavior occurs, we don't want to ignore it, but the bot should not stop either
 # instead, we just include a print(ERR_RESPONSE) as fallback so we have feedback
 err_response = 'BLEEP BLOOP I\'M MALFUNCTIONING PLEASE CALL MY CREATOR @flyomotive TO FIX ME!'
@@ -342,6 +345,14 @@ async def sms(ctx):
         msgresponse = 'Invalid message format. Use \'>help sms\' for more info.'
 
     await ctx.send(msgresponse)
+
+# '>twitch_notify' - establishes notification for stream events (went live, went offline) for specified channel.
+@start.bot.command(name='twitch_notify', help='Currently WIP.')
+async def twitch_notify(ctx):
+    topic = ctx.message.content[15:]
+
+    response = lt.twitch_sub2webhook('subscribe', topic, 300)
+    await ctx.send(response.json)
 
 # '>cookie' - reads a fortune cookie quote to the user
 #@start.bot.command(name='cookie', help='Reads a fortune cookie quote to you.')
