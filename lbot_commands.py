@@ -379,7 +379,8 @@ async def twitch_notify(ctx):
             mode = 'unsubscribe'
             mode_state = 'disabled'
         else:
-            raise lh.InputError(message='Invalid command format. Use \'>help twitch_notify\' for more info.')
+            raise lh.InputError(
+                message='Invalid command format. Use \'>help twitch_notify\' for more info.')
 
         # TODO: Add auto-renewal feature; for now, we'll use the Twitch API maximum of 10 days.
         lease = 864000
@@ -399,7 +400,7 @@ async def twitch_notify(ctx):
                 msgresponse = f'You\'ve successfully {mode_state} notifications to channel updates from {streamer_name}.'
         else:
             raise lh.APIError(code=response.status_code, url=topic,
-                                headers=response.headers, msg=response.reason, text=response.text)
+                              headers=response.headers, msg=response.reason, text=response.text)
 
     except lh.APIError as err:
         msgresponse = f'Something went wrong. Error {err.code} - {err.msg}'

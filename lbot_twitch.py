@@ -90,7 +90,7 @@ def get_user_id(name):
 
         request = requests.get(url=url, headers=header, params=params)
         response = request
-        
+
         # print(response.json) # DEBUGGING
         user_id = response.json()['data'][0]['id']
     except IndexError:

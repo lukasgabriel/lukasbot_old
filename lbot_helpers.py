@@ -1,5 +1,6 @@
 # lbot_helpers.py
 
+
 class Error(Exception):
     # Base class for exceptions in this module.
     pass
@@ -13,6 +14,7 @@ class APIError(Error):
         self.headers = headers
         self.msg = msg
         self.text = text
+
 
 class InputError(Error):
     # Exception raised for errors in the input.
