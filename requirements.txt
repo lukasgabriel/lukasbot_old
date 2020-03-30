@@ -1,5 +1,6 @@
-discord.py
 libssl1_0_0
+pyopenssl
+discord.py
 hashlib
 hmac
 secrets
