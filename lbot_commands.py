@@ -352,7 +352,7 @@ async def twitch_notify(ctx):
     topic = ctx.message.content[15:]
 
     response = lt.twitch_sub2webhook('subscribe', topic, 300)
-    await ctx.send(response.json)
+    await ctx.send(response.data)
 
 # '>cookie' - reads a fortune cookie quote to the user
 #@start.bot.command(name='cookie', help='Reads a fortune cookie quote to you.')
