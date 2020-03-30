@@ -45,7 +45,8 @@ def twitch_callback():
             temp_secret = ''
             raise EnvironmentError
         
-        expected_sig = hmac.digest(bytes(temp_secret, 'utf-8'), received_bytes, 'sha256')
+        expected_hmac = hmac.HMAC(bytes(temp_secret, 'utf-8'), received_bytes, 'sha256')
+        expected_sig = expected_hmac.digest()
         print(expected_sig)  # DEBUGGING
 
         if expected_sig == received_sig.split('=')[1]:
