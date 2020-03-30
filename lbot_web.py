@@ -28,18 +28,18 @@ def twitch_callback():
         return challenge
         
     else:
-        received_sig = request.headers['X-Hub-Signature'] # DEBUGGING
-        print(received_sig) # DEBUGGING
-        print(request.headers['Content-Length']) # DEBUGGING
+        received_sig = request.headers['X-Hub-Signature']
+        # print(received_sig) # DEBUGGING
+        # print(request.headers['Content-Length']) # DEBUGGING
         received_json = request.json
         received_bytes = request.data
         print('Notification received. Checking signature...')
-        os.environ['TEMP_SECRET'] = '7ebab295bbfc3dae' # DEBUGGING
+        # os.environ['TEMP_SECRET'] = '' # DEBUGGING
 
         try:
             load_dotenv()
             temp_secret = os.environ['TEMP_SECRET']
-            print(temp_secret) # DEBUGGING
+            # print(temp_secret) # DEBUGGING
         except:
             print('No temporary secret found in environment variables.')
             temp_secret = ''
@@ -47,7 +47,7 @@ def twitch_callback():
         
         expected_hmac = hmac.HMAC(bytes(temp_secret, 'utf-8'), received_bytes, 'sha256')
         expected_sig = expected_hmac.digest().hex()
-        print(expected_sig)  # DEBUGGING
+        # print(expected_sig)  # DEBUGGING
 
         if expected_sig == received_sig.split('=')[1]:
             print('Signature validated.')
