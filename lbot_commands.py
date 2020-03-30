@@ -367,6 +367,7 @@ async def sms(ctx):
 @commands.cooldown(4, 86400, commands.BucketType.guild)
 async def twitch_notify(ctx):
     command_raw = ctx.message.content[15:]
+    author = ctx.message.author.name
 
     try:
         streamer_name = command_raw.split(':', 1)[0].strip()
@@ -396,8 +397,10 @@ async def twitch_notify(ctx):
         if response.status_code == 202:
             if mode_state == 'enabled':
                 msgresponse = f'You\'ve successfully {mode_state} notifications to channel updates from {streamer_name} for {duration}.'
+                start.slack_post(f'{author} {mode_state} notifications to channel updates from {streamer_name} for {duration}.')
             if mode_state == 'disabled':
                 msgresponse = f'You\'ve successfully {mode_state} notifications to channel updates from {streamer_name}.'
+                start.slack_post(f'{author} {mode_state} notifications to channel updates from {streamer_name}.')
         else:
             raise lh.APIError(code=response.status_code, url=topic,
                               headers=response.headers, msg=response.reason, text=response.text)
