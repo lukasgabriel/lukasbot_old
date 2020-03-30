@@ -364,7 +364,7 @@ async def sms(ctx):
 # '>twitch_notify' - establishes notification for stream events (went live, went offline) for specified channel.
 @start.bot.command(name='twitch_notify', help='Currently WIP. Format your command like so: STREAMER_NAME : [on/off]')
 # Command can be used twice per day before triggering a (almost) 24-hour cooldown.
-@commands.cooldown(4, 86000, commands.BucketType.guild)
+# @commands.cooldown(4, 86000, commands.BucketType.guild)
 async def twitch_notify(ctx):
     command_raw = ctx.message.content[15:]
 
@@ -376,13 +376,15 @@ async def twitch_notify(ctx):
 
         if 'on' in mode_raw:
             mode = 'subscribe'
+            mode_state = 'enabled'
         elif 'off' in mode_raw:
             mode = 'unsubscribe'
+            mode_state = 'disabled'
         else:
             raise lh.InputError('if \'on\' in mode_raw:', 'InputError')
 
-        # Might add auto-renewal feature; for now, we'll use the Twitch API maximum of 10 days.
-        lease = 865000
+        # Might add auto-renewal feature; for now, we'll use just under the Twitch API maximum of 10 days.
+        lease = 860000
         duration = '{:0>8}'.format(str(datetime.timedelta(seconds=lease)))
 
         # Could be changed to notify of other events.
@@ -391,7 +393,10 @@ async def twitch_notify(ctx):
         response = lt.twitch_sub2webhook(mode, topic, lease)
 
         if response.status_code == 202:
-            msgresponse = f'You\'ve successfully enabled notifcations to channel updates from {streamer_name} for {duration}.'
+            if mode_state == 'enabled':
+                msgresponse = f'You\'ve successfully {mode_state} notifications to channel updates from {streamer_name} for {duration}.'
+            if mode_state == 'disabled':
+                msgresponse = f'You\'ve successfully {mode_state} notifications to channel updates from {streamer_name}.'
         else:
             raise lh.APIError(code=response.status_code, url=topic,
                               headers=response.headers, msg=response.reason)
