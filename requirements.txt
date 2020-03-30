@@ -1,4 +1,5 @@
 discord.py
+libssl1_0_0
 hashlib
 hmac
 secrets
