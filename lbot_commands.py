@@ -363,16 +363,14 @@ async def sms(ctx):
 
 # '>twitch_notify' - establishes notification for stream events (went live, went offline) for specified channel.
 @start.bot.command(name='twitch_notify', help='Currently WIP. Format your command like so: STREAMER_NAME : [on/off]')
-# Command can be used twice per day before triggering a (almost) 24-hour cooldown.
-# @commands.cooldown(4, 86000, commands.BucketType.guild)
+# Command can be used twice per day before triggering a 24-hour cooldown.
+@commands.cooldown(4, 86400, commands.BucketType.guild)
 async def twitch_notify(ctx):
     command_raw = ctx.message.content[15:]
 
     try:
         streamer_name = command_raw.split(':', 1)[0].strip()
         mode_raw = command_raw.rsplit(':', 1)[1].strip()
-
-        streamer_id = lt.get_user_id(streamer_name)
 
         if 'on' in mode_raw:
             mode = 'subscribe'
@@ -383,9 +381,11 @@ async def twitch_notify(ctx):
         else:
             raise lh.InputError('if \'on\' in mode_raw:', 'InputError')
 
-        # Might add auto-renewal feature; for now, we'll use just under the Twitch API maximum of 10 days.
-        lease = 860000
+        # TODO: Add auto-renewal feature; for now, we'll use the Twitch API maximum of 10 days.
+        lease = 864000
         duration = '{:0>8}'.format(str(datetime.timedelta(seconds=lease)))
+
+        streamer_id = lt.get_user_id(streamer_name)
 
         # Could be changed to notify of other events.
         topic = '/streams?user_id=' + streamer_id
@@ -399,13 +399,13 @@ async def twitch_notify(ctx):
                 msgresponse = f'You\'ve successfully {mode_state} notifications to channel updates from {streamer_name}.'
         else:
             raise lh.APIError(code=response.status_code, url=topic,
-                              headers=response.headers, msg=response.reason)
+                                headers=response.headers, msg=response.reason, text=response.text)
 
-    except(lh.APIError):
-        msgresponse = f'Something went wrong. Error: {response.status_code} - {response.reason}'
+    except lh.APIError as err:
+        msgresponse = f'Something went wrong. Error {err.code} - {err.msg}'
     except(lh.InputError, TypeError, KeyError, ValueError, SyntaxError, IndexError):
         msgresponse = 'Invalid command format. Use \'>help twitch_notify\' for more info.'
     except():
-        msgresponse = 'Unspecified error. @flyomotive'
+        msgresponse = 'Unspecified error. @bot_dad'
 
     await ctx.send(msgresponse)
