@@ -374,18 +374,18 @@ async def twitch_notify(ctx):
             raise InputError
 
         lease =  865000 # Might add auto-renewal feature; for now, we'll use the Twitch API maximum of 10 days.
-        duration = '{:0>8}'.format(str(timedelta(seconds=lease)))
+        duration = '{:0>8}'.format(str(datetime.timedelta(seconds=lease)))
         
         topic = lt.TWITCH_API + '/streams?user_login=' + streamer # Could be changed to notify of other events.
 
         response = lt.twitch_sub2webhook(mode, topic, lease)
 
-        if response.status_code == requests.codes.ok:
+        if response.status_code == lt.requests.codes.ok:
             msgresponse = f'You\'ve successfully enabled notifcations to channel updates from {streamer} for {duration}.' 
         else:
             msgresponse = 'Something went wrong.'
 
-    except(VaueError):
+    except(ValueError):
         msgresponse = 'Invalid command format. Use \'>help twitch_notify\' for more info.'
         
     await ctx.send(msgresponse)
