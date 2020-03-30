@@ -402,7 +402,7 @@ async def twitch_notify(ctx):
         duration = '{:0>8}'.format(str(datetime.timedelta(seconds=lease)))
 
         # Could be changed to notify of other events.
-        topic = lt.TWITCH_API + '/streams?user_login=' + streamer
+        topic = '/streams?user_login=' + streamer
 
         response = lt.twitch_sub2webhook(mode, topic, lease)
 
