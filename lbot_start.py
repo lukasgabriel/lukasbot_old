@@ -41,9 +41,8 @@ comm_prefix = '>'
 # set the command prefix that the bot will respond to
 bot = commands.Bot(command_prefix=comm_prefix)
 
+
 # send POST request to Slack webhook to post the msg to the Slack channel.
-
-
 def slack_post(msg):
 
     try:
@@ -73,9 +72,8 @@ def slack_post(msg):
 
     return
 
+
 # get number of recipient from address book
-
-
 def get_number(recipient):
 
     recipient_t = recipient.title()
@@ -86,9 +84,8 @@ def get_number(recipient):
     else:
         return None
 
+
 # send SMS via twilio API
-
-
 def sms_msg(msg, number, author):
 
     try:
