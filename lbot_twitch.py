@@ -2,9 +2,15 @@
 
 import os
 from dotenv import load_dotenv
+
 import requests
+
 from secrets import token_hex
-import hmac, hashlib, json, time, base64
+import hmac
+import hashlib
+import json
+import time
+import base64
 
 load_dotenv()
 
@@ -28,6 +34,7 @@ except:
 
 TWITCH_API = 'https://api.twitch.tv/helix'
 
+
 def get_twitch_token():
     TWITCH_AUTH_URL = 'https://id.twitch.tv/oauth2/token'
     params = {'client_id': TWITCH_CLIENT_ID,
@@ -47,7 +54,7 @@ def revoke_twitch_token(token):
 
     request = requests.post(TWITCH_REVOKE_URL, params=params)
     response = request
-    
+
     print(response)
     return response
 
@@ -80,4 +87,3 @@ def twitch_sub2webhook(mode, topic, lease):
     # print(params, header) # DEBUGGING
     # print(response) # DEBUGGING
     return response
-
