@@ -46,7 +46,7 @@ def twitch_callback():
             raise EnvironmentError
         
         expected_hmac = hmac.HMAC(bytes(temp_secret, 'utf-8'), received_bytes, 'sha256')
-        expected_sig = expected_hmac.digest()
+        expected_sig = expected_hmac.digest().hex()
         print(expected_sig)  # DEBUGGING
 
         if expected_sig == received_sig.split('=')[1]:
@@ -55,6 +55,6 @@ def twitch_callback():
             print('Signature invalid!')
             received_json = None
 
-        os.environ['TEMP_SECRET'] = None
+        os.environ['TEMP_SECRET'] = ''
         return 'Received.'
         #TODO: Handle incoming notifications.
