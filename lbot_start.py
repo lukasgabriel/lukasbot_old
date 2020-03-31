@@ -36,10 +36,13 @@ address_book = {
 }
 
 # include command prefix here
-comm_prefix = '>'
+COMM_PREFIX = '>'
+
+# include channel ID of notification/announcement channel
+NOTIFICATION_CHANNEL_ID = 673739313460150287
 
 # set the command prefix that the bot will respond to
-bot = commands.Bot(command_prefix=comm_prefix)
+bot = commands.Bot(command_prefix=COMM_PREFIX)
 
 
 # send POST request to Slack webhook to post the msg to the Slack channel.
@@ -110,6 +113,7 @@ def sms_msg(msg, number, author):
 
     return
 
+
 # establish event that catches the cooldown error and sends it as a message
 @bot.event
 async def on_command_error(ctx, error):
@@ -118,6 +122,7 @@ async def on_command_error(ctx, error):
         cooldown_formatted = time.strftime('%H:%M:%S', time.gmtime(cooldown))
         await ctx.send('This command is on cooldown right now. You can use it again in ' + cooldown_formatted + '.')
     raise error
+
 
 # creates event that prints console output as soon as bot connects to discord
 @bot.event
@@ -128,9 +133,13 @@ async def on_ready():
 
     slack_post(msg)
 
+
+# sends a single message to a specific channel
+def send2channel(channel_id, msg):
+    channel = bot.get_channel(channel_id)
+    await channel.send(msg)
+
 # function that does the actual 'starting'
-
-
 def lbot():
     # load the global variable for the discord token from the env variables
     try:
