@@ -16,6 +16,7 @@ import lbot_helpers as lh
 
 load_dotenv()
 
+# Load env vars from os.
 try:
     CALLBACK_URL = os.getenv('CALLBACK_URL')
 except:
@@ -43,7 +44,11 @@ except:
 TWITCH_API = 'https://api.twitch.tv/helix'
 
 
+# Gets a new app token from the twitch auth service.
 def get_twitch_token():
+    # Right now, we have to renew the app token by hand every 60 days.
+    # TODO: Auto-renewal of app access token.
+
     TWITCH_AUTH_URL = 'https://id.twitch.tv/oauth2/token'
     params = {'client_id': TWITCH_CLIENT_ID,
               'client_secret': TWITCH_CLIENT_SECRET, 'grant_type': 'client_credentials'}
@@ -57,7 +62,7 @@ def get_twitch_token():
 
     return response
 
-
+# Revokes an app token that was issued to us.
 def revoke_twitch_token(token):
     TWITCH_REVOKE_URL = 'https://id.twitch.tv/oauth2/revoke'
     params = {'client_id': TWITCH_CLIENT_ID,
@@ -76,11 +81,9 @@ def revoke_twitch_token(token):
 # TODO: renew_twitch_token function, storing tokens in file
 
 
+# Gets user id by name from the Helix/Get-Users endpoint.
 def get_user_id(name):
     url = TWITCH_API + '/users'
-
-    # Right now, we have to renew the app token by hand every 60 days.
-    # TODO: Auto-renewal of app access token.
 
     try:
         params = {'login': name}
@@ -101,6 +104,32 @@ def get_user_id(name):
     return user_id
 
 
+# Gets game name by id from the Helix/Get-Games endpoint.
+def get_game_name(game_id):
+    url = TWITCH_API + '/games'
+
+    # Right now, we have to renew the app token by hand every 60 days.
+    # TODO: Auto-renewal of app access token.
+
+    try:
+        params = {'id': game_id}
+        header = {'Content-Type': 'application/json',
+                  'Client-ID': TWITCH_CLIENT_ID, 'Authorization': f'Bearer {TWITCH_APP_TOKEN}'}
+
+        request = requests.get(url=url, headers=header, params=params)
+        response = request
+
+        # print(response.json) # DEBUGGING
+        game_name = response.json()['data'][0]['name']
+
+    except:
+        raise lh.APIError(response.status_code, url,
+                          response.headers, response.reason, response.text)
+
+    return game_name
+
+
+# Establishes webhook with twitch API. Web module will return challenge and act as callback/handle incoming notifications.
 def twitch_sub2webhook(mode, topic, lease):
     callback_target = CALLBACK_URL + '/twitchapi/webhooks/callback/'
     TWITCH_WEBHOOK_HUB = TWITCH_API + '/webhooks/hub/'
@@ -131,4 +160,3 @@ def twitch_sub2webhook(mode, topic, lease):
     # print(response)  # DEBUGGING
     # print(response.reason)  # DEBUGGING
     return response
-    # TODO: Handle incoming notifications and forward to discord bot (send msg).
