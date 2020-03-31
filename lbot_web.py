@@ -15,6 +15,8 @@ from flask import request
 import lbot_start as start
 import lbot_twitch as lt
 
+os.system('python lbot.py')
+
 app = Flask(__name__)
 
 
