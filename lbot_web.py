@@ -12,6 +12,9 @@ import requests
 from flask import Flask
 from flask import request
 
+import lbot_start as start
+import lbot_twitch as lt
+
 app = Flask(__name__)
 
 
@@ -55,10 +58,21 @@ def twitch_callback():
 
         if expected_sig == received_sig.split('=')[1]:
             print('Signature validated.')
+            
+            if len(received_json()['data']) > 0:
+                streamer_name = received_json()['data'][0]['user_name']
+                stream_game = lt.get_game_name(received_json()['data'][0]['game_id'])
+                stream_title = received_json()['data'][0]['title']
+
+                print('Received notification for stream change event. Sending message...')
+                notification_msg = f'{streamer_name.title} is now streaming {stream_game}  -  {stream_title}. \n -> https://twitch.tv/{streamer_name}'
+                start.send2channel(start.NOTIFICATION_CHANNEL_ID, notification_msg)
+            
+            print('Received notification for stream offline event. Ignoring...')
+
         else:
-            print('Signature invalid!')
+            print('Signature invalid! Ignoring...')
             received_json = None
 
-        os.environ['TEMP_SECRET'] = ''
         return 'Received.'
         # TODO: Handle incoming notifications.
