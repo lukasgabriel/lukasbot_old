@@ -293,7 +293,8 @@ async def whattoplay(ctx):
         'GeoGuessr',
         'MS Paint Adventures',
         'Town of Salem',
-        'Fallout 76   .....just kidding lmao, don\'t fucking touch that game with a 100 ft pole'
+        'Valorant',
+        'Mount & Blade II: Bannerlord'
     ]
 
     response = 'Hmmm, let me think...  today, you could play ' + \
