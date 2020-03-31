@@ -77,7 +77,6 @@ def revoke_twitch_token(token):
 
 
 def get_user_id(name):
-    apptoken = TWITCH_APP_TOKEN
     url = TWITCH_API + '/users'
 
     # Right now, we have to renew the app token by hand every 60 days.
@@ -86,7 +85,7 @@ def get_user_id(name):
     try:
         params = {'login': name}
         header = {'Content-Type': 'application/json',
-                  'Client-ID': TWITCH_CLIENT_ID, 'Authorization': f'Bearer {apptoken}'}
+                  'Client-ID': TWITCH_CLIENT_ID, 'Authorization': f'Bearer {TWITCH_APP_TOKEN}'}
 
         request = requests.get(url=url, headers=header, params=params)
         response = request
@@ -123,7 +122,7 @@ def twitch_sub2webhook(mode, topic, lease):
               'hub.callback': callback_target, 'hub.lease_seconds': lease, 'hub.secret': temp_secret}
 
     header = {'Content-Type': 'application/json',
-              'Client-ID': TWITCH_CLIENT_ID}
+              'Client-ID': TWITCH_CLIENT_ID, 'Authorization': f'Bearer {TWITCH_APP_TOKEN}'}
 
     request = requests.post(TWITCH_WEBHOOK_HUB, headers=header, params=params)
     response = request
