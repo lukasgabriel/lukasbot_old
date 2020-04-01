@@ -68,7 +68,7 @@ def twitch_callback():
                 stream_title = received_json['data'][0]['title']
 
                 print('Received notification for stream change event. Sending message...')
-                notification_msg = f'{streamer_name} is now streaming {stream_game}  -  {stream_title}.  -> https://twitch.tv/{streamer_name}'
+                notification_msg = f'{streamer_name} is now streaming {stream_game}  -  {stream_title}  ->  https://twitch.tv/{streamer_name}'
                 # start.send2channel(start.NOTIFICATION_CHANNEL_ID, notification_msg) # Does not work
                 start.send2webhook(notification_msg)
             else:
