@@ -60,7 +60,7 @@ def twitch_callback():
 
         if expected_sig == received_sig.split('=')[1]:
             print('Signature validated.')
-            print(received_json) # DEBUGGING
+            # print(received_json) # DEBUGGING
 
             if len(received_json['data']) > 0:
                 streamer_name = received_json['data'][0]['user_name']
