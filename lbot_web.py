@@ -1,5 +1,7 @@
 # lbot_web.py
 
+import asyncio
+
 import os
 from dotenv import load_dotenv
 
@@ -24,7 +26,7 @@ def hello_world():
 
 # TODO: Verify hash of response
 @app.route('/twitchapi/webhooks/callback/', methods=['GET', 'POST'])
-def twitch_callback():
+async def twitch_callback():
 
     if request.method == 'GET':
         challenge = request.args.get('hub.challenge')
