@@ -90,7 +90,7 @@ def slack_post(msg):
 
 # sends a message to a discord webhook
 def send2webhook(msg):
-    webhook_target = f'{WEBHOOK_ROOT}{WEBHOOK_ID}/{WEBHOOK_TOKEN}/'
+    webhook_target = f'{WEBHOOK_ROOT}{WEBHOOK_ID}/{WEBHOOK_TOKEN}'
     response = requests.post(webhook_target, data={'content': msg}, headers={'Content-Type': 'application/json'})
     if response.status_code != 200:
         raise lh.APIError(response.status_code, webhook_target,
