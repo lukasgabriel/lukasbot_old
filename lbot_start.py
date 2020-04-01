@@ -20,7 +20,16 @@ from twilio.rest import Client
 import discord
 from discord.ext import commands
 
+import lbot_helpers as lh
+
 load_dotenv()
+
+try:
+    WEBHOOK_ID = os.getenv('WEBHOOK_ID')
+    WEBHOOK_TOKEN = os.getenv('WEBHOOK_TOKEN')
+except:
+    print('Error: No Discord Webhook ID/Token found in environment variables!')
+    raise EnvironmentError
 
 # telephone number address book for sms commands
 address_book = {
@@ -40,6 +49,9 @@ COMM_PREFIX = '>'
 
 # include channel ID of notification/announcement channel
 NOTIFICATION_CHANNEL_ID = 673739313460150287
+
+# include webhook URL for notifications
+WEBHOOK_ROOT = 'https://discordapp.com/api/webhooks/'
 
 # set the command prefix that the bot will respond to
 bot = commands.Bot(command_prefix=COMM_PREFIX)
@@ -75,6 +87,14 @@ def slack_post(msg):
 
     return
 
+
+# sends a message to a discord webhook
+def send2webhook(msg):
+    webhook_target = f'{WEBHOOK_ROOT}{WEBHOOK_ID}/{WEBHOOK_TOKEN}/'
+    response = requests.post(webhook_target, data={'content': msg}, headers={'Content-Type': 'application/json'})
+    if response.status_code != 200:
+        raise lh.APIError(response.status_code, webhook_target,
+                          response.headers, response.reason, response.text)
 
 # get number of recipient from address book
 def get_number(recipient):
@@ -135,10 +155,10 @@ async def on_ready():
 
 
 # sends a single message to a specific channel
-def send2channel(channel_id, msg):
-    bot.wait_until_ready()
+async def send2channel(channel_id, msg):
+    await bot.wait_until_ready()
     channel = bot.get_channel(channel_id)
-    channel.send(msg)
+    await channel.send(msg)
 
 # function that does the actual 'starting'
 def lbot():
