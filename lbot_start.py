@@ -135,9 +135,10 @@ async def on_ready():
 
 
 # sends a single message to a specific channel
-def send2channel(channel_id, msg):
+async def send2channel(channel_id, msg):
+    await bot.wait_until_ready()
     channel = bot.get_channel(channel_id)
-    channel.send(msg)
+    await channel.send(msg)
 
 # function that does the actual 'starting'
 def lbot():
