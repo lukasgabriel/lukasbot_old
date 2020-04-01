@@ -26,7 +26,7 @@ def hello_world():
 
 # TODO: Verify hash of response
 @app.route('/twitchapi/webhooks/callback/', methods=['GET', 'POST'])
-async def twitch_callback():
+def twitch_callback():
 
     if request.method == 'GET':
         challenge = request.args.get('hub.challenge')
@@ -69,7 +69,7 @@ async def twitch_callback():
 
                 print('Received notification for stream change event. Sending message...')
                 notification_msg = f'{streamer_name.title} is now streaming {stream_game}  -  {stream_title}. \n -> https://twitch.tv/{streamer_name}'
-                await start.send2channel(start.NOTIFICATION_CHANNEL_ID, notification_msg)
+                start.send2channel(start.NOTIFICATION_CHANNEL_ID, notification_msg)
             else:
                 print('Received notification for stream offline event. Ignoring...')
 
