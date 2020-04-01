@@ -119,8 +119,12 @@ def get_game_name(game_id):
         request = requests.get(url=url, headers=header, params=params)
         response = request
 
-        # print(response.json) # DEBUGGING
-        game_name = response.json()['data'][0]['name']
+        try:
+            # print(response.json) # DEBUGGING
+            game_name = response.json()['data'][0]['name']
+        except IndexError:
+            print('No name data in API response.')
+            game_name = ''
 
     except:
         raise lh.APIError(response.status_code, url,
