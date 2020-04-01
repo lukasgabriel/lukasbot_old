@@ -92,7 +92,7 @@ def slack_post(msg):
 def send2webhook(msg):
     print(msg) # DEBUGGING
     webhook_target = f'{WEBHOOK_ROOT}{WEBHOOK_ID}/{WEBHOOK_TOKEN}'
-    response = requests.post(webhook_target, data={'content': msg}, headers={'Content-Type': 'application/json'})
+    response = requests.post(webhook_target, params={'content': msg}, headers={'Content-Type': 'application/json'})
     if response.status_code != 200:
         raise lh.APIError(response.status_code, webhook_target,
                           response.headers, response.reason, response.text)
