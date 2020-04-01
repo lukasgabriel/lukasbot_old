@@ -1,3 +1,4 @@
+asyncio
 discord.py
 flask
 django
