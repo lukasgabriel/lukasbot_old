@@ -90,13 +90,11 @@ def slack_post(msg):
 
 # sends a message to a discord webhook
 def send2webhook(msg):
-    print(msg) # DEBUGGING
+    # print(msg) # DEBUGGING
     webhook_target = f'{WEBHOOK_ROOT}{WEBHOOK_ID}/{WEBHOOK_TOKEN}'
     data = {'content': f'\"{msg}\"'}
     response = requests.post(webhook_target, data=data, headers={'Content-Type': 'application/json'})
-    if response.status_code != 200:
-        raise lh.APIError(response.status_code, webhook_target,
-                          response.headers, response.reason, response.text)
+    print(f'Discord API response: {response.status_code} {webhook_target} {response.reason} {response.text}')
 
 # get number of recipient from address book
 def get_number(recipient):
