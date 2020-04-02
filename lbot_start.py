@@ -21,6 +21,7 @@ import discord
 from discord.ext import commands
 
 import lbot_helpers as lh
+import lbot_data as ld
 
 load_dotenv()
 
@@ -30,19 +31,6 @@ try:
 except:
     print('Error: No Discord Webhook ID/Token found in environment variables!')
     raise EnvironmentError
-
-# telephone number address book for sms commands
-address_book = {
-    'Alex': '+4917621214313',
-    'Tommi': '+4915733709805',
-    'Lukas': '+491623424473',
-    'Gabri': '+4915732612200',
-    'Sascha': '+4915733350547',
-    'Svenja': '+491725923971',
-    'Tolga': '+4915783461039',
-    'Gafar': '+4917668547754',
-    'Felix': '+4917656761234'
-}
 
 # include command prefix here
 COMM_PREFIX = '>'
@@ -90,21 +78,24 @@ def slack_post(msg):
 
 # sends a message to a discord webhook
 def send2webhook(msg):
-    print(msg) # DEBUGGING
+    print(msg)  # DEBUGGING
     webhook_target = f'{WEBHOOK_ROOT}{WEBHOOK_ID}/{WEBHOOK_TOKEN}'
     data = {'content': msg}
-    response = requests.post(webhook_target, data=json.dumps(data), headers={'Content-Type': 'application/json'})
+    response = requests.post(webhook_target, data=json.dumps(
+        data), headers={'Content-Type': 'application/json'})
     if response.status_code not in range(200, 299):
         raise lh.APIError(response.status_code, webhook_target,
                           response.headers, response.reason, response.text)
 
 # get number of recipient from address book
+
+
 def get_number(recipient):
 
     recipient_t = recipient.title()
 
-    if recipient_t in address_book:
-        number = address_book[recipient_t]
+    if recipient_t in ld.address_book:
+        number = ld.address_book[recipient_t]
         return number
     else:
         return None
@@ -163,6 +154,8 @@ async def send2channel(channel_id, msg):
     await channel.send(msg)
 
 # function that does the actual 'starting'
+
+
 def lbot():
     # load the global variable for the discord token from the env variables
     try:
