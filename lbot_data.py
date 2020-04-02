@@ -16,39 +16,39 @@ goodbottie = [
 ]
 
 greetings_earlymorning = [
-    'Good morning, {author}.',
-    'Up early, {author}?'
+    f'Good morning, {author}.',
+    f'Up early, {author}?'
 ]
 greetings_morning = [
-    'Good morning, {author}.',
-    'Hey. Can\'t wait for lunch. What are you having?'
+    f'Good morning, {author}.',
+    f'Hey. Can\'t wait for lunch. What are you having?'
 ]
 greetings_noon = [
-    'Nice to see you, {author}.',
-    'Hello, {author}'
+    f'Nice to see you, {author}.',
+    f'Hello, {author}'
 ]
 greetings_afternoon = [
-    'Good afternoon, {author}.',
-    'Hey, {author}.'
+    f'Good afternoon, {author}.',
+    f'Hey, {author}.'
 ]
 greetings_evening = [
-    'Good evening, {author}.',
-    'Have you had a successful day, {author}?'
+    f'Good evening, {author}.',
+    f'Have you had a successful day, {author}?'
 ]
 greetings_night = [
-    'Still awake, {author}?',
-    'Can\'t sleep, {author}?'
+    f'Still awake, {author}?',
+    f'Can\'t sleep, {author}?'
 ]
 
 goodbyes = [
-    'Good-bye, {author}.',
-    'Farewell, {author}.',
-    'See you soon, {author}.',
-    'Stay safe, {author}.',
-    'Stay safe, {author}.',
-    'See you later, alligator!',
-    'See you in a while, crocodile!',
-    'Take care, {author}.'
+    f'Good-bye, {author}.',
+    f'Farewell, {author}.',
+    f'See you soon, {author}.',
+    f'Stay safe, {author}.',
+    f'Stay safe, {author}.',
+    f'See you later, alligator!',
+    f'See you in a while, crocodile!',
+    f'Take care, {author}.'
 ]
 
 about = 'I was made by the glorious @floymotive#1337 to serve him and his friends. He told me he would beat up anyone who is mean to me, so watch out. \n View my source code at https://github.com/lukasgabriel/lukasbot'
