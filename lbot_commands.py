@@ -49,7 +49,7 @@ async def hello(ctx):
     author = ctx.message.author.name
 
     # TODO: Set this to our timezone.
-    hour = datetime.timezone.now().hour
+    hour = datetime.datetime.now().hour
 
     if 4 <= hour < 7:
         response = random.choice(ld.greetings_earlymorning)
