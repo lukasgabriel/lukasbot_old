@@ -21,6 +21,9 @@ import lbot_start as start
 # Module by me that contains some additional stuff but is used by other modules as well.
 import lbot_helpers as lh
 
+# Module that contains shared functions. TODO: Move all non-discord-specific functions here!
+import lbot_functions as lf
+
 # Module that contains the long text strings/lists used in some of the commands so this file with the actual code doesn't become so long.
 import lbot_data as ld
 
@@ -251,3 +254,57 @@ async def twitch_notify(ctx):
         msgresponse = 'Unspecified error. @bot_dad'
 
     await ctx.send(msgresponse)
+
+
+# '>magic8ball' - users can shake the 'magic 8-ball' and get a random answer.
+@start.bot.command(name='magic8ball', help='Ask the magic 8-ball for its infinite wisdom.')
+async def magic8ball(ctx):
+    response = random.choice(ld.magic_8ball)
+    await ctx.send(response)
+
+
+# '>dice' - users can roll a dice with as many sides as they want
+@start.bot.command(name='dice', help='Roll a dice. You can choose how many sides the dice should have (default is 6).')
+async def dice(ctx):
+    command_raw = ctx.message.content[6:]
+    author = ctx.message.author.name
+
+    try:
+        sides = int(command_raw)
+        if sides < 1_000_000_000_000_000:
+            roll = random.randint(1, sides)
+            response = f'{author} rolled a {roll} out of {sides}.'
+        else:
+            response = 'That number is a little large, my dude. Compensating for something?'
+    except ValueError:
+        response = 'Invalid command format. Use \'>help dice\' for more info.'
+
+    await ctx.send(response)
+
+
+# '>urban' - returns the urban dictionary definition for the user-specified search term - powered by UrbanScraper (http://urbanscraper.herokuapp.com/).
+@start.bot.command(name='urban', help='You can look up the urban dictionary definition for a word using this command.')
+# Command can be used five times per minute before triggering a 5-minute cooldown.
+@commands.cooldown(5, 300, commands.BucketType.guild)
+async def urban(ctx):
+    command_raw = ctx.message.content[6:]
+    term = command_raw.strip()
+    response = lf.get_urban_definition(term)
+
+    try:
+
+        if response != False:
+            term = response[0]
+            definition = response[1]
+            url = response[2]
+            example = response[3]
+            msgresponse = f'I found the following definition for \'{term}\' on urbandictionary.com: \n -> \"{definition}\" \n \n -> Example: {example} \n -> Link to definition: {url}'
+
+        else:
+            msgresponse = 'Sorry, but I couldn\'t find a definition for {term} on urbandictionary.com'
+
+    except Exception as e:
+        msgresponse = 'An error occured.'
+        raise e
+
+    await ctx.send(response)
