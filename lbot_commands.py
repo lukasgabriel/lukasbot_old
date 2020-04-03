@@ -162,7 +162,7 @@ async def addresses(ctx):
     for key in ld.address_book:
         recipients += '  -  ' + key
 
-    await ctx.send('The following recipients are available:' + recipients)
+    await ctx.send('>>> The following recipients are available:' + recipients)
 
 
 # '>sms' - send sms via twilio
@@ -188,12 +188,12 @@ async def sms(ctx):
             start.sms_msg(msg, number, author)
             start.slack_post('SMS request received from {author} to ' +
                              recipient + ' with message: ' + msg_raw.rsplit(':', 1)[0])
-            msgresponse = 'Outbound SMS request received.'
+            msgresponse = '>>> Outbound SMS request received.'
         else:
-            msgresponse = 'Recipient not found in address book. Check your spelling or have a look at the address book with \'>addresses\'.'
+            msgresponse = '>>> Recipient not found in address book. Check your spelling or have a look at the address book with \'>addresses\'.'
 
     except:
-        msgresponse = 'Invalid message format. Use \'>help sms\' for more info.'
+        msgresponse = '>>> Invalid message format. Use \'>help sms\' for more info.'
 
     await ctx.send(msgresponse)
 
@@ -233,11 +233,11 @@ async def twitch_notify(ctx):
 
         if response.status_code == 202:
             if mode_state == 'enabled':
-                msgresponse = f'You\'ve successfully {mode_state} notifications to channel updates from {streamer_name} for {duration}.'
+                msgresponse = f'>>> You\'ve successfully {mode_state} notifications to channel updates from {streamer_name} for {duration}.'
                 start.slack_post(
                     f'{author} {mode_state} notifications to channel updates from {streamer_name} for {duration}.')
             if mode_state == 'disabled':
-                msgresponse = f'You\'ve successfully {mode_state} notifications to channel updates from {streamer_name}.'
+                msgresponse = f'>>> You\'ve successfully {mode_state} notifications to channel updates from {streamer_name}.'
                 start.slack_post(
                     f'{author} {mode_state} notifications to channel updates from {streamer_name}.')
         else:
@@ -245,13 +245,13 @@ async def twitch_notify(ctx):
                               headers=response.headers, msg=response.reason, text=response.text)
 
     except lh.APIError as err:
-        msgresponse = f'Something went wrong. Error {err.code} - {err.msg}'
+        msgresponse = f'>>> Something went wrong. Error {err.code} - {err.msg}'
     except lh.InputError as err:
-        msgresponse = f'Input Error: {err.message}'
+        msgresponse = f'>>> Input Error: {err.message}'
     except(TypeError, KeyError, ValueError, SyntaxError, IndexError):
-        msgresponse = 'Invalid command format. Use \'>help twitch_notify\' for more info.'
+        msgresponse = '>>> Invalid command format. Use \'>help twitch_notify\' for more info.'
     except():
-        msgresponse = 'Unspecified error. @bot_dad'
+        msgresponse = '>>> Unspecified error. @bot_dad'
 
     await ctx.send(msgresponse)
 
@@ -260,7 +260,7 @@ async def twitch_notify(ctx):
 @start.bot.command(name='magic8ball', help='Ask the magic 8-ball for its infinite wisdom.')
 async def magic8ball(ctx):
     response = random.choice(ld.magic_8ball)
-    await ctx.send(response)
+    await ctx.send(f'>>> :8ball:   {response}')
 
 
 # '>dice' - users can roll a dice with as many sides as they want
@@ -273,11 +273,11 @@ async def dice(ctx):
         sides = int(command_raw)
         if sides < 1_000_000_000_000_000:
             roll = random.randint(1, sides)
-            response = f'{author} rolled a {roll} out of {sides}.'
+            response = f'>>> :game_die:    {author} rolled a {roll} out of {sides}.'
         else:
-            response = 'That number is a little large, my dude. Compensating for something?'
+            response = '>>> That number is a little large, my dude. Compensating for something?'
     except ValueError:
-        response = 'Invalid command format. Use \'>help dice\' for more info.'
+        response = '>>> Invalid command format. Use \'>help dice\' for more info.'
 
     await ctx.send(response)
 
@@ -298,13 +298,13 @@ async def urban(ctx):
             definition = response[1]
             url = response[2]
             example = response[3]
-            msgresponse = f'I found the following definition for \'{term}\' on urbandictionary.com : \n :arrow_right:  \"{definition}\" \n :arrow_right: Example: {example} \n :arrow_right:  Link to definition: {url} \n'
+            msgresponse = f'>>> I found the following definition for \'{term}\' on urbandictionary.com : \n :arrow_right:  \"{definition}\" \n :arrow_right: Example: {example} \n :arrow_right:  Link to definition: {url} \n'
 
         else:
-            msgresponse = 'Sorry, but I couldn\'t find a definition for {term} on urbandictionary.com'
+            msgresponse = '>>> Sorry, but I couldn\'t find a definition for {term} on urbandictionary.com'
 
     except Exception as e:
-        msgresponse = 'An error occured.'
+        msgresponse = '>>> An error occured. @bot_dad'
         raise e
 
     await ctx.send(msgresponse)
