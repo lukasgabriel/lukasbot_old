@@ -268,7 +268,8 @@ async def magic8ball(ctx):
 async def dice(ctx):
     command_raw = ctx.message.content[6:]
     author = ctx.message.author.name
-
+    if len(command_raw) == 0:
+        command_raw = '6'
     try:
         sides = int(command_raw)
         if sides < 1_000_000_000_000_000:
