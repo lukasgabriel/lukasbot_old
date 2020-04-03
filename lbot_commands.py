@@ -178,7 +178,7 @@ async def sms(ctx):
         author = ctx.message.author.name
         msg_raw = ctx.message.content[4:]
 
-        msg = 'Message from {author}: ' + \
+        msg = f'Message from {author}: ' + \
             msg_raw.rsplit(':', 1)[0].strip()
         recipient_raw = msg_raw.rsplit(':', 1)[1]
         recipient = recipient_raw.strip()
