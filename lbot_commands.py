@@ -307,4 +307,4 @@ async def urban(ctx):
         msgresponse = 'An error occured.'
         raise e
 
-    await ctx.send(response)
+    await ctx.send(msgresponse)
