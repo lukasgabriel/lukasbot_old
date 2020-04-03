@@ -298,7 +298,7 @@ async def urban(ctx):
             definition = response[1]
             url = response[2]
             example = response[3]
-            msgresponse = f'>>> I found the following definition for \'{term}\' on urbandictionary.com : \n :arrow_right:  \"{definition}\" \n :arrow_right: Example: {example} \n :arrow_right:  Link to definition: {url} \n'
+            msgresponse = f'>>> I found the following definition for \'{term}\' on urbandictionary.com : \n \n :arrow_right:  \"{definition}\" \n \n :arrow_right:  Example: {example} \n \n :arrow_right:  Link to definition: {url} \n \n'
 
         else:
             msgresponse = '>>> Sorry, but I couldn\'t find a definition for {term} on urbandictionary.com'
