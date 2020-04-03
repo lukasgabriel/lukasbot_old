@@ -5,8 +5,11 @@
 '''
 This module contains the custom commands that the bot is able to perform.
 '''
-
+# Time and timezones
 import datetime
+import pytz
+
+# Random numbers (not for security)
 import random
 
 # Module by me that interacts with the Twitch API.
@@ -48,8 +51,10 @@ async def hello(ctx):
     response = err_response
     author = ctx.message.author.name
 
-    # TODO: Set this to our timezone.
-    hour = datetime.datetime.now().hour
+    # Get UTC first, then local time, then the 'hour' component.
+    utc_now = pytz.utc.localize(datetime.datetime.utcnow())
+    germany_now = utc_now.astimezone(pytz.timezone('Europe/Berlin'))
+    hour = germany_now.hour
 
     if 4 <= hour < 7:
         response = random.choice(ld.greetings_earlymorning)
@@ -64,7 +69,7 @@ async def hello(ctx):
     else:
         response = random.choice(ld.greetings_night)
 
-    await ctx.send(response)
+    await ctx.send(response.format(author))
 
 
 # '>about' - returns a short description of the bot and its author
@@ -99,7 +104,7 @@ async def bye(ctx):
     author = ctx.message.author.name
     response = random.choice(ld.goodbyes)
 
-    await ctx.send(response)
+    await ctx.send(response.format(author))
 
 
 # '>cat' - pulls a generated cat picture via 'thisapidoesnotexist', saves it temporarily and sends it to the context
