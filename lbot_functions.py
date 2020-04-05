@@ -96,7 +96,7 @@ def tl_from_discord(raw_args):
 
     try:
         translated = translate(text, src, dest)
-        msgresponse = f">>> Translation from {googletrans.LANGUAGES[translated.src].title()} to {googletrans.LANGUAGES[translated.dest].title()}: \n \n {translated.origin} -> {translated.text}"
+        msgresponse = f">>> Translation from {googletrans.LANGUAGES[translated.src].title()} to {googletrans.LANGUAGES[translated.dest].title()}: \n \n {translated.origin} :arrow_right: {translated.text}"
         return msgresponse
     except ValueError:
         msgresponse = ">>> Invalid command format. Use '>help tl' for more info."
