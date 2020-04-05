@@ -10,3 +10,4 @@
 
 # ignore vscode settings files
 /.vscode
+*.h5
