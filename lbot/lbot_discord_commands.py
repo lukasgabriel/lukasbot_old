@@ -1,10 +1,11 @@
-#                  #
-# lbot_commands.py #
-#                  #
+# lbot_commands.py 
+
 
 """
-This module contains the custom commands that the bot is able to perform.
+This module contains the custom commands that the discord bot is able to perform.
 """
+
+
 # Time and timezones
 import datetime
 import pytz
@@ -13,19 +14,19 @@ import pytz
 import random
 
 # Module by me that interacts with the Twitch API.
-import lbot_twitch as lt
+import lbot_twitch as twitch
 
 # Module by me that initializes the bot and contains variables.
-import lbot_start as start
+import lbot_discord as discord
 
 # Module by me that contains some additional stuff but is used by other modules as well.
-import lbot_helpers as lh
+from lbot_helpers import *
 
 # Module that contains shared functions. TODO: Move all non-discord-specific functions here!
-import lbot_functions as lf
+from lbot_functions import tl_from_command, get_urban_definition
 
 # Module that contains the long text strings/lists used in some of the commands so this file with the actual code doesn't become so long.
-import lbot_data as ld
+import lbot_data as data
 
 # Discord Python Library
 import discord
@@ -65,17 +66,17 @@ async def hello(ctx):
     hour = germany_now.hour
 
     if 4 <= hour < 7:
-        response = random.choice(ld.greetings_earlymorning)
+        response = random.choice(data.greetings_earlymorning)
     elif 8 <= hour < 12:
-        response = random.choice(ld.greetings_morning)
+        response = random.choice(data.greetings_morning)
     elif 12 <= hour < 15:
-        response = random.choice(ld.greetings_noon)
+        response = random.choice(data.greetings_noon)
     elif 15 <= hour < 19:
-        response = random.choice(ld.greetings_afternoon)
+        response = random.choice(data.greetings_afternoon)
     elif 19 <= hour < 23:
-        response = random.choice(ld.greetings_evening)
+        response = random.choice(data.greetings_evening)
     else:
-        response = random.choice(ld.greetings_night)
+        response = random.choice(data.greetings_night)
 
     await ctx.send(response.format(author))
 
@@ -86,7 +87,7 @@ async def hello(ctx):
     help="Lukas made a bot. Tell him how cool that is, right now. Tell him how proud you are.",
 )
 async def about(ctx):
-    response = ld.about
+    response = data.about
 
     await ctx.send(response)
 
@@ -104,7 +105,7 @@ async def vibecheck(ctx):
 @start.bot.command(name="goodbot", help=":)")
 async def goodbot(ctx):
     # TODO: add a 'badbot' command with a field for 'reason' and corresponding 'score' for the bot for feedback
-    response = random.choice(ld.goodbottie)
+    response = random.choice(data.goodbottie)
 
     await ctx.send(response)
 
@@ -113,7 +114,7 @@ async def goodbot(ctx):
 @start.bot.command(name="bye", help="Es ist wie Spiegel.")
 async def bye(ctx):
     author = ctx.message.author.name
-    response = random.choice(ld.goodbyes)
+    response = random.choice(data.goodbyes)
 
     await ctx.send(response.format(author))
 
@@ -150,7 +151,7 @@ async def person(ctx):
 async def whattoplay(ctx):
     response = (
         "Hmmm, let me think...  today, you could play "
-        + random.choice(ld.mp_games)
+        + random.choice(data.mp_games)
         + "!"
     )
 
@@ -190,7 +191,7 @@ async def addgame(ctx):
 )
 async def addresses(ctx):
     recipients = ""
-    for key in ld.address_book:
+    for key in data.address_book:
         recipients += "  -  " + key
 
     await ctx.send(">>> The following recipients are available:" + recipients)
@@ -218,8 +219,8 @@ async def sms(ctx):
         number = start.get_number(recipient)
 
         if number != None:
-            start.sms_msg(msg, number, author)
-            start.slack_post(
+            twilio.send_sms(msg, number, author)
+            slack.post(
                 "SMS request received from {author} to "
                 + recipient
                 + " with message: "
@@ -257,7 +258,7 @@ async def twitch_notify(ctx):
             mode = "unsubscribe"
             mode_state = "disabled"
         else:
-            raise lh.InputError(
+            raise InputError(
                 message="Invalid command format. Use '>help twitch_notify' for more info."
             )
 
@@ -265,26 +266,26 @@ async def twitch_notify(ctx):
         lease = 864000
         duration = "{:0>8}".format(str(datetime.timedelta(seconds=lease)))
 
-        streamer_id = lt.get_user_id(streamer_name)
+        streamer_id = twitch.get_user_id(streamer_name)
 
         # Could be changed to notify of other events.
         topic = "/streams?user_id=" + streamer_id
 
-        response = lt.twitch_sub2webhook(mode, topic, lease)
+        response = twitch.sub_to_webhook(mode, topic, lease)
 
         if response.status_code == 202:
             if mode_state == "enabled":
                 msgresponse = f">>> You've successfully {mode_state} notifications to channel updates from {streamer_name} for {duration}."
-                start.slack_post(
+                slack.post(
                     f"{author} {mode_state} notifications to channel updates from {streamer_name} for {duration}."
                 )
             if mode_state == "disabled":
                 msgresponse = f">>> You've successfully {mode_state} notifications to channel updates from {streamer_name}."
-                start.slack_post(
+                slack.post(
                     f"{author} {mode_state} notifications to channel updates from {streamer_name}."
                 )
         else:
-            raise lh.APIError(
+            raise APIError(
                 code=response.status_code,
                 url=topic,
                 headers=response.headers,
@@ -292,9 +293,9 @@ async def twitch_notify(ctx):
                 text=response.text,
             )
 
-    except lh.APIError as err:
+    except APIError as err:
         msgresponse = f">>> Something went wrong. Error {err.code} - {err.msg}"
-    except lh.InputError as err:
+    except InputError as err:
         msgresponse = f">>> Input Error: {err.message}"
     except (TypeError, KeyError, ValueError, SyntaxError, IndexError):
         msgresponse = (
@@ -311,7 +312,7 @@ async def twitch_notify(ctx):
     name="magic8ball", help="Ask the magic 8-ball for its infinite wisdom."
 )
 async def magic8ball(ctx):
-    response = random.choice(ld.magic_8ball)
+    response = random.choice(data.magic_8ball)
     await ctx.send(f">>> :8ball:   {response}")
 
 
@@ -348,7 +349,7 @@ async def dice(ctx):
 async def urban(ctx):
     command_raw = ctx.message.content[6:]
     term = command_raw.strip()
-    response = lf.get_urban_definition(term)
+    response = get_urban_definition(term)
 
     try:
 
@@ -379,5 +380,5 @@ async def urban(ctx):
 async def tl(ctx):
     command_raw = ctx.message.content[3:]
     raw_args = command_raw.strip().split(":")
-    msgresponse = lf.tl_from_discord(raw_args)
+    msgresponse = tl_from_discord(raw_args)
     await ctx.send(msgresponse)

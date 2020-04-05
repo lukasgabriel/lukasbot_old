@@ -1,9 +1,11 @@
-# lbot_functions.py
+# functions.py
+
 
 import requests
 import googletrans
 
-import lbot_helpers as lh
+from lbot_helpers import *
+
 
 # returns the urban dictionary definition for the user-specified search term - powered by UrbanScraper (http://urbanscraper.herokuapp.com/).
 # I know this is ugly code, but I couldn't think of an easier way to check different cases of the search term.
@@ -49,7 +51,7 @@ def get_urban_definition(term):
                 elif response.status_code == 404:
                     return False
     else:
-        raise lh.APIError(
+        raise APIError(
             code=response.status_code,
             url=f"http://urbanscraper.herokuapp.com/define/{term}",
             headers=response.headers,
@@ -65,7 +67,7 @@ def translate(text="Please specify a text string to translate.", src="auto", des
     return translated
 
 
-def tl_from_discord(raw_args):
+def tl_from_command(raw_args):
     text = raw_args[0].strip()
     if len(text) == 0:
         msgresponse = "Please specify a text string to translate."

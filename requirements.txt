@@ -11,3 +11,11 @@ fortune
 gunicorn
 django-heroku
 googletrans
+numpy
+scipy
+matplotlib
+h5py
+tensorflow
+keras
+opencv-python
+imageai

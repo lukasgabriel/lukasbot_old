@@ -1,21 +1,21 @@
 # lbot_web.py
 
-import asyncio
 
 import os
 from dotenv import load_dotenv
 
 import hashlib
 import hmac
-import json
 
 import requests
+import json
 
 from flask import Flask
 from flask import request
 
-import lbot_start as start
+import lbot_discord as discord
 import lbot_twitch as lt
+
 
 app = Flask(__name__)
 
@@ -72,7 +72,7 @@ def twitch_callback():
                 )
                 notification_msg = f"{streamer_name} is now streaming {stream_game}  -  {stream_title}  ->  https://twitch.tv/{streamer_name}"
                 # start.send2channel(start.NOTIFICATION_CHANNEL_ID, notification_msg) # Does not work
-                start.send2webhook(notification_msg)
+                discord.msg_webhook(notification_msg)
             else:
                 print("Received notification for stream offline event. Ignoring...")
 

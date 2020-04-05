@@ -4,19 +4,19 @@ import os
 from dotenv import load_dotenv
 
 import requests
+import json
 
 from secrets import token_hex
 import hmac
 import hashlib
-import json
+
 import time
 import base64
 
-import lbot_helpers as lh
+from lbot_helpers import *
+
 
 load_dotenv()
-
-# Load env vars from os.
 try:
     CALLBACK_URL = os.getenv("CALLBACK_URL")
 except:
@@ -60,7 +60,7 @@ def get_twitch_token():
         request = requests.post(TWITCH_AUTH_URL, params=params)
         response = request
     except:
-        raise lh.APIError(
+        raise APIError(
             response.status_code,
             TWITCH_AUTH_URL,
             response.headers,
@@ -80,7 +80,7 @@ def revoke_twitch_token(token):
         request = requests.post(TWITCH_REVOKE_URL, params=params)
         response = request
     except:
-        raise lh.APIError(
+        raise APIError(
             response.status_code,
             TWITCH_REVOKE_URL,
             response.headers,
@@ -113,9 +113,9 @@ def get_user_id(name):
         # print(response.json) # DEBUGGING
         user_id = response.json()["data"][0]["id"]
     except IndexError:
-        raise lh.InputError(message="User not found.")
+        raise InputError(message="User not found.")
     except:
-        raise lh.APIError(
+        raise APIError(
             response.status_code, url, response.headers, response.reason, response.text
         )
 
@@ -148,7 +148,7 @@ def get_game_name(game_id):
             game_name = ""
 
     except:
-        raise lh.APIError(
+        raise APIError(
             response.status_code, url, response.headers, response.reason, response.text
         )
 
