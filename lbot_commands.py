@@ -220,7 +220,7 @@ async def sms(ctx):
         if number != None:
             start.sms_msg(msg, number, author)
             start.slack_post(
-                "SMS request received from {author} to "
+                f"SMS request received from {author} to "
                 + recipient
                 + " with message: "
                 + msg_raw.rsplit(":", 1)[0]
