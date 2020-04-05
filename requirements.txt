@@ -5,7 +5,7 @@ django
 requests
 PyJWT
 twilio
-thisapidoesnotexist
+ThisApiDoesNotExist
 python-dotenv
 fortune
 gunicorn
