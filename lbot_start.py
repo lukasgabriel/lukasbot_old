@@ -2,9 +2,9 @@
 # lbot_start.py #
 #               #
 
-'''
+"""
 I have to put something in this docstring. #TODO: Add stuff here
-'''
+"""
 
 import time
 
@@ -26,20 +26,20 @@ import lbot_data as ld
 load_dotenv()
 
 try:
-    WEBHOOK_ID = os.getenv('WEBHOOK_ID')
-    WEBHOOK_TOKEN = os.getenv('WEBHOOK_TOKEN')
+    WEBHOOK_ID = os.getenv("WEBHOOK_ID")
+    WEBHOOK_TOKEN = os.getenv("WEBHOOK_TOKEN")
 except:
-    print('Error: No Discord Webhook ID/Token found in environment variables!')
+    print("Error: No Discord Webhook ID/Token found in environment variables!")
     raise EnvironmentError
 
 # include command prefix here
-COMM_PREFIX = '>'
+COMM_PREFIX = ">"
 
 # include channel ID of notification/announcement channel
 NOTIFICATION_CHANNEL_ID = 673739313460150287
 
 # include webhook URL for notifications
-WEBHOOK_ROOT = 'https://discordapp.com/api/webhooks/'
+WEBHOOK_ROOT = "https://discordapp.com/api/webhooks/"
 
 # set the command prefix that the bot will respond to
 bot = commands.Bot(command_prefix=COMM_PREFIX)
@@ -49,27 +49,28 @@ bot = commands.Bot(command_prefix=COMM_PREFIX)
 def slack_post(msg):
 
     try:
-        SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL')
+        SLACK_WEBHOOK_URL = os.getenv("SLACK_WEBHOOK_URL")
     except:
-        print('Error: No Slack Webhook URL found in environment variables!')
+        print("Error: No Slack Webhook URL found in environment variables!")
         raise EnvironmentError
 
     webhook_url = SLACK_WEBHOOK_URL
     slack_data = {
-        'text': msg,
-        'username': 'lukasbot-discord',
-        'icon_url': 'https://github.com/lukasgabriel/lukasbot/blob/master/media/avatar.png',
-        'channel': '#lukasbot-discord'
+        "text": msg,
+        "username": "lukasbot-discord",
+        "icon_url": "https://github.com/lukasgabriel/lukasbot/blob/master/media/avatar.png",
+        "channel": "#lukasbot-discord",
     }
 
     response = requests.post(
-        webhook_url, data=json.dumps(slack_data),
-        headers={'Content-Type': 'application/json'}
+        webhook_url,
+        data=json.dumps(slack_data),
+        headers={"Content-Type": "application/json"},
     )
 
     if response.status_code != 200:
         raise ValueError(
-            'Request to slack returned an error %s, the response is:\n%s'
+            "Request to slack returned an error %s, the response is:\n%s"
             % (response.status_code, response.text)
         )
 
@@ -79,13 +80,22 @@ def slack_post(msg):
 # sends a message to a discord webhook
 def send2webhook(msg):
     print(msg)  # DEBUGGING
-    webhook_target = f'{WEBHOOK_ROOT}{WEBHOOK_ID}/{WEBHOOK_TOKEN}'
-    data = {'content': msg}
-    response = requests.post(webhook_target, data=json.dumps(
-        data), headers={'Content-Type': 'application/json'})
+    webhook_target = f"{WEBHOOK_ROOT}{WEBHOOK_ID}/{WEBHOOK_TOKEN}"
+    data = {"content": msg}
+    response = requests.post(
+        webhook_target,
+        data=json.dumps(data),
+        headers={"Content-Type": "application/json"},
+    )
     if response.status_code not in range(200, 299):
-        raise lh.APIError(response.status_code, webhook_target,
-                          response.headers, response.reason, response.text)
+        raise lh.APIError(
+            response.status_code,
+            webhook_target,
+            response.headers,
+            response.reason,
+            response.text,
+        )
+
 
 # get number of recipient from address book
 
@@ -105,24 +115,22 @@ def get_number(recipient):
 def sms_msg(msg, number, author):
 
     try:
-        TWILIO_ACCOUNT_SID = os.getenv('TWILIO_ACCOUNT_SID')
+        TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
     except:
-        print('Error: No Twilio Account SID found in environment variables!')
+        print("Error: No Twilio Account SID found in environment variables!")
         raise EnvironmentError
 
     try:
-        TWILIO_AUTH_TOKEN = os.getenv('TWILIO_AUTH_TOKEN')
+        TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
     except:
-        print('Error: No Twilio Auth Token found in environment variables!')
+        print("Error: No Twilio Auth Token found in environment variables!")
         raise EnvironmentError
 
     client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
-    message = client.messages.create(body=msg,
-                                     from_='+12055573240',
-                                     to=number)
+    message = client.messages.create(body=msg, from_="+12055573240", to=number)
 
-    slack_post('SMS message sent via twilio with SID: ' + message.sid)
+    slack_post("SMS message sent via twilio with SID: " + message.sid)
 
     return
 
@@ -132,17 +140,21 @@ def sms_msg(msg, number, author):
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
         cooldown = error.retry_after
-        cooldown_formatted = time.strftime('%H:%M:%S', time.gmtime(cooldown))
-        await ctx.send('This command is on cooldown right now. You can use it again in ' + cooldown_formatted + '.')
+        cooldown_formatted = time.strftime("%H:%M:%S", time.gmtime(cooldown))
+        await ctx.send(
+            "This command is on cooldown right now. You can use it again in "
+            + cooldown_formatted
+            + "."
+        )
     raise error
 
 
 # creates event that prints console output as soon as bot connects to discord
 @bot.event
 async def on_ready():
-    print(f'{bot.user.name} has connected to Discord!')
+    print(f"{bot.user.name} has connected to Discord!")
 
-    msg = 'I\'ve just connected to Discord.'
+    msg = "I've just connected to Discord."
 
     slack_post(msg)
 
@@ -153,15 +165,16 @@ async def send2channel(channel_id, msg):
     channel = bot.get_channel(channel_id)
     await channel.send(msg)
 
+
 # function that does the actual 'starting'
 
 
 def lbot():
     # load the global variable for the discord token from the env variables
     try:
-        DISCORD_TOKEN = os.getenv('DISCORD_TOKEN')
+        DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
     except:
-        print('Error: No Discord Token found in environment variables!')
+        print("Error: No Discord Token found in environment variables!")
         raise EnvironmentError
 
     # establishes connection with discord API and starts bot locally
