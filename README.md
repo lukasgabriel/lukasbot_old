@@ -24,3 +24,8 @@
 | **`sms`**          |  Send an SMS. Format your request like so:  MESSAGE : RECIPIENT.                                 |
 | **`vibecheck`**    |  Fluff function. Currently, you can't fail a vibe check.                                         |
 | **`whattoplay`**   |  Displays a random game suggestion from a list. You can add to it via `addgame`.                 |
+| **`urban`**        |  Looks up the urbandictionary.com definition of your search term for you.                        |
+| **`twitch_notify`**|  Notification for stream online/change events. Usage: STREAMER : ON/OFF.                         |
+| **`dice`**         |  Roll a dice. You can specify the number of sides it should have, the default is 6.              |
+| **`magic8ball`**   |  Ask the 'magic 8-ball' a question and it will answer with on of its 20 phrases.                 |
+
