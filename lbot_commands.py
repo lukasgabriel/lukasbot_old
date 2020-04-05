@@ -360,10 +360,24 @@ async def urban(ctx):
             msgresponse = f">>> I found the following definition for '{term}' on urbandictionary.com : \n \n :arrow_right:  \"{definition}\" \n \n :arrow_right:  Example: {example} \n \n :arrow_right:  Link to definition: {url} \n \n"
 
         else:
-            msgresponse = f">>> Sorry, but I couldn't find a definition for {term} on urbandictionary.com"
+            msgresponse = f">>> Sorry, but I couldn't find a definition for '{term}' on urbandictionary.com"
 
     except Exception as e:
-        msgresponse = ">>> An error occured. @bot_dad"
+        msgresponse = ">>> An error occurred. @bot_dad"
         raise e
 
+    await ctx.send(msgresponse)
+
+
+# '>tl' - translates input via googletrans, optional manual language select, default is autodetect to english.
+@start.bot.command(
+    name="tl",
+    help="Translate text into another language. Usage: TEXT:DESTINATION_LANGUAGE:SOURCE_LANGUAGE. Destination and source language arguments are optional, defaults are auto-detect to english.",
+)
+# Command can be used ten times per minute before triggering a 3-minute cooldown.
+@commands.cooldown(10, 180, commands.BucketType.guild)
+async def tl(ctx):
+    command_raw = ctx.message.content[3:]
+    raw_args = command_raw.strip().split(":")
+    msgresponse = lf.tl_from_discord(raw_args)
     await ctx.send(msgresponse)
