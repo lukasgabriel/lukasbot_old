@@ -106,3 +106,7 @@ def tl_from_discord(raw_args):
         raise e
 
     return msgresponse
+
+
+def clap_case(text):
+    return text.strip().upper().replace(" ", " :clap: ") + " :clap: "

@@ -381,3 +381,16 @@ async def tl(ctx):
     raw_args = command_raw.strip().split(":")
     msgresponse = lf.tl_from_discord(raw_args)
     await ctx.send(msgresponse)
+
+
+# '>clap' - takes an input string and capitalizes it, putting a :clap: emoji after every word
+@start.bot.command(
+    name="clap",
+    help="Turns your input into 'clapcase'. Use if you really want to emphasize something.",
+)
+async def clap(ctx):
+    command_raw = ctx.message.content[5:]
+    msgresponse = lf.clap_case(command_raw)
+    await ctx.send(msgresponse)
+    await ctx.message.delete()
+

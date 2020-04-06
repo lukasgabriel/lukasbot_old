@@ -28,4 +28,6 @@
 | **`twitch_notify`**|  Notification for stream online/change events. Usage: `STREAMER:ON/OFF`                          |
 | **`dice`**         |  Roll a dice. You can specify the number of sides it should have, the default is 6.              |
 | **`magic8ball`**   |  Ask the 'magic 8-ball' a question and it will answer with one of its 20 phrases.                |
+| **`tl`**           |  Translates user input using googletrans. Usage: PHRASE:DESTINATION:ORIGIN (dest & orig optional)|
+| **`clapcase`**     |  Turns user input into 'clapcase'. Used to really emphasize something.                           |
 
