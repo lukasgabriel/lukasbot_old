@@ -91,12 +91,11 @@ async def about(ctx):
     await ctx.send(response)
 
 
-# '>vibecheck' - currently, you can't fail the vibe check.
+# '>vibecheck' - pass or fail.
 @start.bot.command(name="vibecheck", help="VIBE CHECK")
 async def vibecheck(ctx):
-    # TODO: make it so users can fail the vibe check.
-    response = "Passed."
-
+    vibelist = ["Passed.", "YOU HAVE FAILED THE VIBE CHECK   :vibeCheckFailed:   PREPARE YOURSELF"]
+    response = random.choice(vibelist)
     await ctx.send(response)
 
 
