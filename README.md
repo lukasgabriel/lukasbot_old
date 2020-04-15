@@ -30,4 +30,5 @@
 | **`magic8ball`**   |  Ask the 'magic 8-ball' a question and it will answer with one of its 20 phrases.                |
 | **`tl`**           |  Translates user input using googletrans. Usage: PHRASE:DESTINATION:ORIGIN (dest & orig optional)|
 | **`clapcase`**     |  Turns user input into 'clapcase'. Used to really emphasize something.                           |
+| **`echo`**         |  'Echoes' the users' input back to them and deletes the message that called the command.         |
 
