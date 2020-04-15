@@ -392,4 +392,15 @@ async def clap(ctx):
     msgresponse = lf.clap_case(command_raw)
     await ctx.send(msgresponse)
     await ctx.message.delete()
+    
+# '>echo' - returns users' input back to them and deletes original message
+@start.bot.command(
+    name="echo",
+    help="Echo.",
+)
+async def echo(ctx):
+    command_raw = ctx.message.content[5:]
+    msgresponse = command_raw.strip()
+    await ctx.send(msgresponse)
+    await ctx.message.delete()
 
