@@ -410,7 +410,7 @@ async def echo(ctx):
     help="Interface with Terraria server on remote host.",
 )
 async def tserv(ctx):
-    command_raw = ctx.message.content[6:]
+    command_raw = ctx.message.content[6:].strip()
     if command_raw == "start":
         msgresponse = lf.remote_exec('httptoterraria')
     await ctx.send(msgresponse)
