@@ -412,5 +412,11 @@ async def echo(ctx):
 async def tserv(ctx):
     command_raw = ctx.message.content[6:].strip()
     if command_raw == "start":
-        msgresponse = lf.start_on_client('httptoterraria')
+        response = lf.start_on_client('httptoterraria')
+
+        if response.status_code == 200:
+            msgresponse = 'Received.'
+        else:
+            msgresponse = 'Server error.'
+            
     await ctx.send(msgresponse)
