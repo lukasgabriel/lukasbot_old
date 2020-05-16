@@ -127,4 +127,4 @@ def start_on_client(application):
 
     url = NGROK_URL + application
     response = requests.get(url=url)
-    return response.text()
+    return response.text
