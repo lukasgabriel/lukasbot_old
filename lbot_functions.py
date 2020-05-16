@@ -4,6 +4,13 @@ import requests
 import googletrans
 
 import lbot_helpers as lh
+import lbot_data as ld
+
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # returns the urban dictionary definition for the user-specified search term - powered by UrbanScraper (http://urbanscraper.herokuapp.com/).
 # I know this is ugly code, but I couldn't think of an easier way to check different cases of the search term.
@@ -110,3 +117,14 @@ def tl_from_discord(raw_args):
 
 def clap_case(text):
     return text.strip().upper().replace(" ", " :clap: ") + " :clap: "
+
+def start_on_client(application):
+    try:
+        NGROK_URL = os.getenv("NGROK_URL")
+    except:
+        print("Error: Missing ngrok URL in environment variables.")
+        raise EnvironmentError
+
+    url = NGROK_URL + application
+    response = requests.get(url=url)
+    return response.text()

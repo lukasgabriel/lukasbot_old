@@ -404,3 +404,13 @@ async def echo(ctx):
     await ctx.send(msgresponse)
     await ctx.message.delete()
 
+# '>tserv' - Interfacing with locally hosted Terraria server process
+@start.bot.command(
+    name="tserv",
+    help="Interface with Terraria server on remote host.",
+)
+async def tserv(ctx):
+    command_raw = ctx.message.content[6:]
+    if command_raw == "start":
+        msgresponse = lf.remote_exec('httptoterraria')
+    await ctx.send(msgresponse)
