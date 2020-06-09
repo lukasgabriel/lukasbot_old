@@ -410,16 +410,20 @@ async def echo(ctx):
     help="Interface with Terraria server on remote host.",
 )
 async def tserv(ctx):
-    command_raw = ctx.message.content[6:].strip()
-    author = ctx.message.author.name
-    if command_raw == "start":
-        response_status = lf.start_on_client("httptoterraria")
+    on= False
+    if on:
+        command_raw = ctx.message.content[6:].strip()
+        author = ctx.message.author.name
+        if command_raw == "start":
+            response_status = lf.start_on_client("httptoterraria")
 
-        if response_status == 200:
-            msgresponse = "Received."
-            start.slack_post(f'Terraria server started by {author}.')
-        else:
-            msgresponse = f'An error occured.'
-            start.slack_post(f'An error occured while starting Terraria server; author: {author}.')
+            if response_status == 200:
+                msgresponse = "Received."
+                start.slack_post(f'Terraria server started by {author}.')
+            else:
+                msgresponse = f'An error occured.'
+                start.slack_post(f'An error occured while starting Terraria server; author: {author}.')
+    else:
+        msgresponse = 'Fuck off.'
 
     await ctx.send(msgresponse)
